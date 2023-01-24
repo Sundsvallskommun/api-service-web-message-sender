@@ -1,0 +1,17 @@
+version: "3"
+services:
+  ms-webmessagesender:
+    container_name: ms-webmessagesender
+    image: 'ms-webmessagesender'
+    network_mode: bridge
+    restart: always
+    build:
+      context: ../../..
+      dockerfile: src/main/docker/Dockerfile
+    ports:
+      - "9102:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: 'test'
+      SPRING_CLOUD_CONFIG_URI: '<url>'
+      SPRING_CLOUD_CONFIG_USERNAME: '<username>'
+      SPRING_CLOUD_CONFIG_PASSWORD: '<password>'

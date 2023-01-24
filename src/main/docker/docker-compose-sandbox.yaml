@@ -1,0 +1,50 @@
+version: "3"
+services:
+  ms-webmessagesender-sandbox:
+    container_name: ms-webmessagesender-sandbox
+    image: 'ms-webmessagesender'
+    network_mode: bridge
+    links:
+      - 'ms-webmessagesender-wiremock-sandbox:wiremock'
+      - 'ms-webmessagesender-db-sandbox:mariadb'
+    restart: always
+    build:
+      context: ../../..
+      dockerfile: ./src/main/docker/Dockerfile
+    ports:
+      - "9726:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: 'sandbox'
+      SPRING_JPA_HIBERNATE_DDL-AUTO: 'update'
+      SPRING_DATASOURCE_URL: 'jdbc:mariadb://ms-webmessagesender-db-sandbox:3306/dbwebmessagesender'
+      SPRING_DATASOURCE_USERNAME: 'sandbox-user'
+      SPRING_DATASOURCE_PASSWORD: 'sandbox-password'
+      INTEGRATION_OEP_URL: 'http://wiremock:8080/api-oep'
+      INTEGRATION_OEP_USERNAME: 'oep-user'
+      INTEGRATION_OEP_PASSWORD: 'oep-password'
+
+    depends_on:
+      - ms-webmessagesender-db-sandbox
+      - ms-webmessagesender-wiremock-sandbox
+
+  ms-webmessagesender-db-sandbox:
+    container_name: ms-webmessagesender-db-sandbox
+    image: 'mariadb:10.6.4'
+    network_mode: bridge
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD : 'yes'
+      MARIADB_DATABASE: 'dbwebmessagesender'
+      MARIADB_USER: 'sandbox-user'
+      MARIADB_PASSWORD: 'sandbox-password'
+    expose:
+      - '3306'
+
+  ms-webmessagesender-wiremock-sandbox:
+    container_name: ms-webmessagesender-wiremock-sandbox
+    image: wiremock/wiremock
+    network_mode: bridge
+    restart: always
+    volumes:
+      - $PWD/src/test/resources/wiremock:/home/wiremock
+    expose:
+      - '8080'
