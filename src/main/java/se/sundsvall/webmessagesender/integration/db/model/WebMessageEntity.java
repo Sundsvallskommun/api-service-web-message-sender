@@ -21,9 +21,10 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "web_message", indexes = {
-	@Index(name = "web_message_party_id_index", columnList = "party_id")
-})
+@Table(name = "web_message",
+	indexes = {
+		@Index(name = "web_message_party_id_index", columnList = "party_id")
+	})
 public class WebMessageEntity {
 
 	@Id
@@ -43,7 +44,7 @@ public class WebMessageEntity {
 
 	@Column(name = "oep_message_id")
 	private Integer oepMessageId;
-	
+
 	@OneToMany(mappedBy = "webMessageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ExternalReferenceEntity> externalReferences;
 
@@ -58,11 +59,11 @@ public class WebMessageEntity {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public WebMessageEntity withId(String id) {
+	public WebMessageEntity withId(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -71,11 +72,11 @@ public class WebMessageEntity {
 		return partyId;
 	}
 
-	public void setPartyId(String partyId) {
+	public void setPartyId(final String partyId) {
 		this.partyId = partyId;
 	}
 
-	public WebMessageEntity withPartyId(String partyId) {
+	public WebMessageEntity withPartyId(final String partyId) {
 		this.partyId = partyId;
 		return this;
 	}
@@ -84,11 +85,11 @@ public class WebMessageEntity {
 		return message;
 	}
 
-	public void setMessage(String message) {
+	public void setMessage(final String message) {
 		this.message = message;
 	}
 
-	public WebMessageEntity withMessage(String message) {
+	public WebMessageEntity withMessage(final String message) {
 		this.message = message;
 		return this;
 	}
@@ -97,11 +98,11 @@ public class WebMessageEntity {
 		return created;
 	}
 
-	public void setCreated(OffsetDateTime created) {
+	public void setCreated(final OffsetDateTime created) {
 		this.created = created;
 	}
 
-	public WebMessageEntity withCreated(OffsetDateTime created) {
+	public WebMessageEntity withCreated(final OffsetDateTime created) {
 		this.created = created;
 		return this;
 	}
@@ -110,12 +111,12 @@ public class WebMessageEntity {
 		return externalReferences;
 	}
 
-	public void setExternalReferences(List<ExternalReferenceEntity> externalReferences) {
+	public void setExternalReferences(final List<ExternalReferenceEntity> externalReferences) {
 		Optional.ofNullable(externalReferences).ifPresent(entities -> entities.stream().forEach(e -> e.setWebMessageEntity(this)));
 		this.externalReferences = externalReferences;
 	}
 
-	public WebMessageEntity withExternalReferences(List<ExternalReferenceEntity> externalReferences) {
+	public WebMessageEntity withExternalReferences(final List<ExternalReferenceEntity> externalReferences) {
 		this.setExternalReferences(externalReferences);
 		return this;
 	}
@@ -124,12 +125,12 @@ public class WebMessageEntity {
 		return attachments;
 	}
 
-	public void setAttachments(List<AttachmentEntity> attachments) {
+	public void setAttachments(final List<AttachmentEntity> attachments) {
 		Optional.ofNullable(attachments).ifPresent(attachment -> attachment.stream().forEach(e -> e.withWebMessageEntity(this)));
 		this.attachments = attachments;
 	}
 
-	public WebMessageEntity withAttachments(List<AttachmentEntity> attachments) {
+	public WebMessageEntity withAttachments(final List<AttachmentEntity> attachments) {
 		this.setAttachments(attachments);
 		return this;
 	}
@@ -138,15 +139,15 @@ public class WebMessageEntity {
 		return oepMessageId;
 	}
 
-	public void setOepMessageId(Integer oepMessageId) {
+	public void setOepMessageId(final Integer oepMessageId) {
 		this.oepMessageId = oepMessageId;
 	}
 
-	public WebMessageEntity withOepMessageId(Integer oepMessageId) {
+	public WebMessageEntity withOepMessageId(final Integer oepMessageId) {
 		this.oepMessageId = oepMessageId;
 		return this;
 	}
-	
+
 	@PrePersist
 	void prePersist() {
 		created = now().truncatedTo(MILLIS);
@@ -154,35 +155,30 @@ public class WebMessageEntity {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(created, externalReferences, id, message, oepMessageId, partyId, attachments);
+		return Objects.hash(attachments, created, externalReferences, id, message, oepMessageId, partyId);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		WebMessageEntity other = (WebMessageEntity) obj;
-		return Objects.equals(created, other.created) && Objects.equals(externalReferences, other.externalReferences)
-				&& Objects.equals(id, other.id) && Objects.equals(message, other.message) && oepMessageId == other.oepMessageId
-				&& Objects.equals(partyId, other.partyId)
-				&& Objects.equals(attachments, attachments);
+		}
+		final WebMessageEntity other = (WebMessageEntity) obj;
+		return Objects.equals(attachments, other.attachments) && Objects.equals(created, other.created) && Objects.equals(externalReferences, other.externalReferences) && Objects.equals(id, other.id) && Objects.equals(message, other.message) && Objects
+			.equals(oepMessageId, other.oepMessageId) && Objects.equals(partyId, other.partyId);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("WebMessageEntity [id=").append(id)
-				.append(", partyId=").append(partyId)
-				.append(", message=").append(message)
-				.append(", created=").append(created)
-				.append(", oepMessageId=").append(oepMessageId)
-				.append(", externalReferences=").append(externalReferences)
-				.append(", attachments=").append(attachments)
-				.append("]");
+		final var builder = new StringBuilder();
+		builder.append("WebMessageEntity [id=").append(id).append(", partyId=").append(partyId).append(", message=").append(message).append(", created=").append(created).append(", oepMessageId=").append(oepMessageId).append(", externalReferences=").append(
+			externalReferences).append(", attachments=").append(attachments).append("]");
 		return builder.toString();
 	}
 }
