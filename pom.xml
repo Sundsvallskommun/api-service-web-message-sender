@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>se.sundsvall.dept44</groupId>
 		<artifactId>dept44-service-parent</artifactId>
-		<version>1.26</version>
+		<version>1.28</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>se.sundsvall</groupId>
@@ -19,9 +19,11 @@
 		<published.container.port.test>8727</published.container.port.test>
 		<published.container.port.production>8726</published.container.port.production>
 		<!-- Service properties -->
+		<jaxb2-maven-plugin.version>2.5.0</jaxb2-maven-plugin.version>
+		<jaxb2-fluent-api.version>3.0</jaxb2-fluent-api.version>
+		<sun-xml-bind.version>3.0.2</sun-xml-bind.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 		<overviewproject.mimetypes.version>1.0.4</overviewproject.mimetypes.version>
-		<oep.version>1.6</oep.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -54,9 +56,18 @@
 		
 		<!-- Generated clients -->
 		<dependency>
-			<groupId>se.sundsvall.generated-clients</groupId>
-			<artifactId>open-e</artifactId>
-			<version>${oep.version}</version>			
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>${sun-xml-bind.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>${sun-xml-bind.version}</version>
 		</dependency>
 		
 		<!-- Test -->
@@ -80,6 +91,42 @@
 	</dependencies>
 	<build>
 		<plugins>
+			<!-- Generate java from wsdl -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>${jaxb2-maven-plugin.version}</version>
+			    <!-- Enables fluent builder for generated classes -->
+			    <dependencies>
+			        <dependency>
+			            <groupId>org.jvnet.jaxb2_commons</groupId>
+			            <artifactId>jaxb2-fluent-api</artifactId>
+			            <version>${jaxb2-fluent-api.version}</version>
+			        </dependency>
+			    </dependencies>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- Enable fluent -->
+					<arguments>
+						<argument>-Xfluent-api</argument>
+					</arguments>
+					<outputDirectory>${project.build.directory}/generated-sources/</outputDirectory>
+					<packageName>se.sundsvall.webmessagesender.generatedsources.oep</packageName>
+					<noGeneratedHeaderComments>true</noGeneratedHeaderComments>
+					<sources>
+						<source>${project.basedir}/src/main/resources/integrations/oep/oep.wsdl</source>
+					</sources>
+					<sourceType>wsdl</sourceType>
+				</configuration>
+			</plugin>
+
 			<!-- Need to add excludes for test files of type doc, docx and pdf -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -98,6 +145,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/se/sundsvall/webmessagesender/Application*</exclude>
+						<exclude>**/se/sundsvall/webmessagesender/generatedsources/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
