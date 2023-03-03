@@ -17,10 +17,9 @@ import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 @Import(FeignConfiguration.class)
 public class OepIntegrationConfiguration {
 
-	private static final JAXBContextFactory JAXB_FACTORY = new JAXBContextFactory.Builder()
-		.build();
+	private static final JAXBContextFactory JAXB_FACTORY = new JAXBContextFactory.Builder().build();
 
-	private static final Builder ENCODER_BUILDER = new Builder()
+	private static final Builder SOAP_ENCODER = new Builder()
 		.withFormattedOutput(false)
 		.withJAXBContextFactory(JAXB_FACTORY)
 		.withSOAPProtocol(SOAPConstants.SOAP_1_1_PROTOCOL)
@@ -30,7 +29,7 @@ public class OepIntegrationConfiguration {
 	FeignBuilderCustomizer feignBuilderCustomizer(OepIntegrationProperties properties) {
 		return FeignMultiCustomizer.create()
 			.withDecoder(new SOAPDecoder(JAXB_FACTORY))
-			.withEncoder(ENCODER_BUILDER.build())
+			.withEncoder(SOAP_ENCODER.build())
 			.withErrorDecoder(new SOAPErrorDecoder())
 			.withRequestInterceptor(new BasicAuthRequestInterceptor(properties.username(), properties.password()))
 			.withRequestTimeoutsInSeconds(properties.connectTimeout(), properties.readTimeout())

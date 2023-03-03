@@ -6,6 +6,7 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static se.sundsvall.webmessagesender.service.mapper.MimeTypeUtility.detectMimeType;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,7 +89,7 @@ public class WebMessageMapper {
 
 	private static Attachment toAttachment(AttachmentEntity attachmentEntity) {
 		return Attachment.create()
-			.withBase64Data(new String(encodeBase64(attachmentEntity.getFile())))
+			.withBase64Data(new String(encodeBase64(attachmentEntity.getFile()), StandardCharsets.UTF_8))
 			.withFileName(attachmentEntity.getFileName())
 			.withMimeType(attachmentEntity.getMimeType());
 	}
