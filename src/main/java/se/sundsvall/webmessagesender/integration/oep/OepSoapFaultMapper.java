@@ -22,17 +22,17 @@ public class OepSoapFaultMapper {
 	/**
 	 * Helper method for converting SOAPFaultException objects to a throwable problem. Incoming fault has the following
 	 * structure:
-	 * 
-	 * <pre>
-	 *	<S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope">
-	 *		<faultcode>S:Server</faultcode>
-	 *		<faultstring>The requested flow instance was not found</faultstring>
-	 *		<detail>
-	 *			<FlowInstanceNotFoundFault xmlns="http://www.oeplatform.org/version/1.0/schemas/integration/callback"/>
-	 *		</detail>
-	 *	</S:Fault>
-	 * </pre>
-	 * 
+	 * {@code 
+	 * 	<pre>
+	 *		<S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope">
+	 *			<faultcode>S:Server</faultcode>
+	 *			<faultstring>The requested flow instance was not found</faultstring>
+	 *			<detail>
+	 *				<FlowInstanceNotFoundFault xmlns="http://www.oeplatform.org/version/1.0/schemas/integration/callback"/>
+	 *			</detail>
+	 *		</S:Fault>
+	 * 	</pre>
+	 * }
 	 * which the method interprets and converts to a throwable problem. If detail contains a child with one of the known
 	 * faults
 	 * that can be thrown by OEP, a throwable problem containing corresponding status code will be returned. In all other

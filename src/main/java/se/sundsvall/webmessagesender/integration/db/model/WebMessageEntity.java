@@ -1,9 +1,9 @@
 package se.sundsvall.webmessagesender.integration.db.model;
 
-import static java.time.OffsetDateTime.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -150,7 +150,7 @@ public class WebMessageEntity {
 
 	@PrePersist
 	void prePersist() {
-		created = now().truncatedTo(MILLIS);
+		created = OffsetDateTime.now(ZoneId.systemDefault()).truncatedTo(MILLIS);
 	}
 
 	@Override
