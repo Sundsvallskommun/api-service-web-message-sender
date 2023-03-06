@@ -4,6 +4,8 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.isBase64;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -30,7 +32,7 @@ public class ValidFileSizeConstraintValidator implements ConstraintValidator<Val
 	}
 
 	private boolean isValidSize(String base64Data, ConstraintValidatorContext context) {
-		boolean isValidSize = decodeBase64(base64Data.getBytes()).length <= maximumByteSize;
+		boolean isValidSize = decodeBase64(base64Data.getBytes(StandardCharsets.UTF_8)).length <= maximumByteSize;
 		
 		if (!isValidSize) {
 			useCustomMessageForValidation(context, String.format(CUSTOM_ERROR_MESSAGE_TEMPLATE, maximumByteSize));

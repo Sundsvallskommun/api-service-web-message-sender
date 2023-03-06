@@ -2,7 +2,6 @@ package se.sundsvall.webmessagesender.api.validation.impl;
 
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 import static org.springframework.util.CollectionUtils.isEmpty;
-import org.apache.commons.lang3.StringUtils;
 import static se.sundsvall.webmessagesender.service.ServiceConstants.REFERENCE_FLOW_INSTANCE_ID;
 
 import java.util.List;
@@ -10,6 +9,8 @@ import java.util.function.Predicate;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import org.apache.commons.lang3.StringUtils;
 
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.api.validation.ValidExternalReferences;
@@ -29,16 +30,16 @@ public class ValidExternalReferencesConstraintValidator implements ConstraintVal
 	private Predicate<ExternalReference> isValidExternalReference(ConstraintValidatorContext context) {
 		return externalReference -> {
 			boolean noneBlank = isNoneBlank(externalReference.getKey(), externalReference.getValue());
+
 			if (noneBlank) {
 				boolean validValue = validValue(externalReference);
 				if (!validValue) {
 					useCustomMessageForValidation(context, CUSTOM_ERROR_MESSAGE);
 				}
-				
 				return validValue;
 			}
 			
-			return noneBlank;
+			return false;
 		};
 	}
 	

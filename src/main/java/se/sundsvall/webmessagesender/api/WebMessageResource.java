@@ -11,8 +11,6 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -46,8 +44,6 @@ import se.sundsvall.webmessagesender.service.WebMessageService;
 @Tag(name = "WebMessages", description = "Web messages")
 public class WebMessageResource {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(WebMessageResource.class);
-
 	@Autowired
 	private WebMessageService webMessageService;
 
@@ -59,7 +55,6 @@ public class WebMessageResource {
 	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "502", description = "Bad gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	public ResponseEntity<Void> createWebMessage(UriComponentsBuilder uriComponentsBuilder, @Valid @RequestBody CreateWebMessageRequest body) {
-		LOGGER.debug("Received createWebMessage()-request: body='{}'", body);
 
 		return ResponseEntity
 			.created(uriComponentsBuilder.path("/webmessages/{id}").buildAndExpand(webMessageService.createWebMessage(body).getId()).toUri())
@@ -76,7 +71,6 @@ public class WebMessageResource {
 	@ApiResponse(responseCode = "502", description = "Bad gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	public ResponseEntity<WebMessage> getWebMessageById(
 		@Parameter(name = "id", description = "Web message ID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid @PathVariable(name = "id", required = true) String id) {
-		LOGGER.debug("Received getWebMessageById()-request: id='{}'", id);
 
 		return ResponseEntity.ok(webMessageService.getWebMessageById(id));
 	}
@@ -90,7 +84,6 @@ public class WebMessageResource {
 	@ApiResponse(responseCode = "502", description = "Bad gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	public ResponseEntity<List<WebMessage>> getWebMessagesByPartyId(
 		@Parameter(name = "partyId", description = "PartyID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "partyId", required = true) @ValidUuid String partyId) {
-		LOGGER.debug("Received getWebMessagesByPartyId()-request: partyId='{}'", partyId);
 
 		return ResponseEntity.ok(webMessageService.getWebMessagesByPartyId(partyId));
 	}
@@ -105,7 +98,6 @@ public class WebMessageResource {
 	public ResponseEntity<List<WebMessage>> getWebMessagesByExternalReference(
 		@Parameter(name = "key", description = "The external-reference key", example = "flowInstanceId") @PathVariable(value = "key", required = true) @Size(min = 3, max = 128) String key,
 		@Parameter(name = "value", description = "The external-reference value", example = "356t4r34f") @PathVariable(value = "value", required = true) @Size(min = 3, max = 128) String value) {
-		LOGGER.debug("Received getWebMessagesByExternalReference()-request: key='{}', value='{}'", key, value);
 
 		return ResponseEntity.ok(webMessageService.getWebMessagesByExternalReference(key, value));
 	}
@@ -119,7 +111,6 @@ public class WebMessageResource {
 	@ApiResponse(responseCode = "502", description = "Bad gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	public ResponseEntity<Void> deleteWebMessageById(
 		@Parameter(name = "id", description = "Web message ID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid @PathVariable String id) {
-		LOGGER.debug("Received deleteWebMessageById-request: id='{}'", id);
 
 		webMessageService.deleteWebMessageById(id);
 		return ResponseEntity.noContent().build();
