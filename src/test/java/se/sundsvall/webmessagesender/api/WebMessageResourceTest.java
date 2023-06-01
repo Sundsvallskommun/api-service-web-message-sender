@@ -53,7 +53,7 @@ class WebMessageResourceTest {
 			.withAttachments(List.of(Attachment.create().withFileName("fileName").withBase64Data("base64Data")))
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages/")
+		webTestClient.post().uri("/webmessages")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()

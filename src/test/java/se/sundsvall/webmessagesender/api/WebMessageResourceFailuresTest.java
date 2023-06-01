@@ -1,26 +1,25 @@
 package se.sundsvall.webmessagesender.api;
 
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
-
-import java.util.List;
-import java.util.UUID;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
-
 import se.sundsvall.webmessagesender.Application;
 import se.sundsvall.webmessagesender.api.model.Attachment;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.service.WebMessageService;
+
+import java.util.List;
+import java.util.UUID;
+
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
@@ -41,7 +40,7 @@ class WebMessageResourceFailuresTest {
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
 			.withPartyId(null); // Missing partyId
 
-		webTestClient.post().uri("/webmessages/")
+		webTestClient.post().uri("/webmessages")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -66,7 +65,7 @@ class WebMessageResourceFailuresTest {
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
 			.withPartyId("invalid"); // Invalid partyId
 
-		webTestClient.post().uri("/webmessages/")
+		webTestClient.post().uri("/webmessages")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -91,7 +90,7 @@ class WebMessageResourceFailuresTest {
 			.withExternalReferences(null) // Missing externalReferences
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages/")
+		webTestClient.post().uri("/webmessages")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -116,7 +115,7 @@ class WebMessageResourceFailuresTest {
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue(" "))) // Invalid externalReferences
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages/")
+		webTestClient.post().uri("/webmessages")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -142,7 +141,7 @@ class WebMessageResourceFailuresTest {
 			.withAttachments(List.of(Attachment.create().withBase64Data("data")))
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages/")
+		webTestClient.post().uri("/webmessages")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -168,7 +167,7 @@ class WebMessageResourceFailuresTest {
 			.withAttachments(List.of(Attachment.create().withFileName("fileName")))
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages/")
+		webTestClient.post().uri("/webmessages")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -194,7 +193,7 @@ class WebMessageResourceFailuresTest {
 			.withAttachments(List.of(Attachment.create().withFileName("fileName").withBase64Data("to_large_base64_data")))
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages/")
+		webTestClient.post().uri("/webmessages")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -220,7 +219,7 @@ class WebMessageResourceFailuresTest {
 			.withAttachments(List.of(Attachment.create().withFileName("fileName").withBase64Data("not base64 åäö")))
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages/")
+		webTestClient.post().uri("/webmessages")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -242,7 +241,7 @@ class WebMessageResourceFailuresTest {
 		// Parameter values
 		final var createWebMessageRequest = "{}";
 
-		webTestClient.post().uri("/webmessages/")
+		webTestClient.post().uri("/webmessages")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -370,12 +369,12 @@ class WebMessageResourceFailuresTest {
 
 		webTestClient.delete().uri("/webmessages/{id}", id)
 			.exchange()
-			.expectStatus().isEqualTo(METHOD_NOT_ALLOWED)
+			.expectStatus().isEqualTo(NOT_FOUND)
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
 			.expectBody()
-			.jsonPath("$.title").isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase())
-			.jsonPath("$.status").isEqualTo(METHOD_NOT_ALLOWED.value())
-			.jsonPath("$.detail").isEqualTo("Request method 'DELETE' not supported");
+			.jsonPath("$.title").isEqualTo(NOT_FOUND.getReasonPhrase())
+			.jsonPath("$.status").isEqualTo(NOT_FOUND.value())
+			.jsonPath("$.detail").isEqualTo("No endpoint DELETE /webmessages/.");
 
 		// Verification
 		verifyNoInteractions(webMessageService);

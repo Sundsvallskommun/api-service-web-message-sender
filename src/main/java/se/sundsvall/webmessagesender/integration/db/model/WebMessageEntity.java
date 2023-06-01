@@ -1,6 +1,14 @@
 package se.sundsvall.webmessagesender.integration.db.model;
 
-import static java.time.temporal.ChronoUnit.MILLIS;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -8,17 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
+import static java.time.temporal.ChronoUnit.MILLIS;
 
 @Entity
 @Table(name = "web_message",
@@ -28,8 +26,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class WebMessageEntity {
 
 	@Id
-	@GeneratedValue(generator = "uuid2")
-	@GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+	@UuidGenerator
 	@Column(name = "id")
 	private String id;
 
