@@ -3,9 +3,6 @@
 ## Beskrivning
 WebMessageSender är en tjänst som ansvarar för att spara och möjliggöra meddelandeutskick via plattformen Open-E.
 
-## Leverantör
-Sundsvalls kommun
-
 ## Status
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-web-message-sender&metric=alert_status)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_api-service-web-message-sender)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-web-message-sender&metric=reliability_rating)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_api-service-web-message-sender)
@@ -15,4 +12,4 @@ Sundsvalls kommun
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-web-message-sender&metric=bugs)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_api-service-web-message-sender)
 
 ## 
-Copyright (c) 2021 Sundsvalls kommun
+Copyright (c) 2023 Sundsvalls kommun
