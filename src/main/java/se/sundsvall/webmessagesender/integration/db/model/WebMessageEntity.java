@@ -8,6 +8,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.TimeZoneStorage;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
@@ -17,6 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
+import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 
 @Entity
 @Table(name = "web_message",
@@ -37,6 +39,7 @@ public class WebMessageEntity {
 	private String message;
 
 	@Column(name = "created")
+	@TimeZoneStorage(NORMALIZE)
 	private OffsetDateTime created;
 
 	@Column(name = "oep_message_id")
@@ -109,7 +112,7 @@ public class WebMessageEntity {
 	}
 
 	public void setExternalReferences(final List<ExternalReferenceEntity> externalReferences) {
-		Optional.ofNullable(externalReferences).ifPresent(entities -> entities.stream().forEach(e -> e.setWebMessageEntity(this)));
+		Optional.ofNullable(externalReferences).ifPresent(entities -> entities.forEach(e -> e.setWebMessageEntity(this)));
 		this.externalReferences = externalReferences;
 	}
 
@@ -123,7 +126,7 @@ public class WebMessageEntity {
 	}
 
 	public void setAttachments(final List<AttachmentEntity> attachments) {
-		Optional.ofNullable(attachments).ifPresent(attachment -> attachment.stream().forEach(e -> e.withWebMessageEntity(this)));
+		Optional.ofNullable(attachments).ifPresent(attachment -> attachment.forEach(e -> e.withWebMessageEntity(this)));
 		this.attachments = attachments;
 	}
 

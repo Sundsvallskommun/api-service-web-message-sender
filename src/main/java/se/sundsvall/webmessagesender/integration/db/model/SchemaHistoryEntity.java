@@ -4,10 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.TimeZoneStorage;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
+
+import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 
 @Entity
 @Table(name = "schema_history")
@@ -23,6 +26,7 @@ public class SchemaHistoryEntity implements Serializable {
 	private String comment;
 
 	@Column(name = "applied", nullable = false)
+	@TimeZoneStorage(NORMALIZE)
 	private OffsetDateTime applied;
 
 	public String getSchemaVersion() {

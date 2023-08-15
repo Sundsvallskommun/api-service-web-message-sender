@@ -23,10 +23,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.soap.Detail;
-import javax.xml.soap.SOAPFault;
-import javax.xml.ws.soap.SOAPFaultException;
+import jakarta.xml.soap.Detail;
+import jakarta.xml.soap.SOAPFault;
+import jakarta.xml.ws.soap.SOAPFaultException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +49,8 @@ import se.sundsvall.webmessagesender.integration.db.model.ExternalReferenceEntit
 import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
 import se.sundsvall.webmessagesender.integration.oep.OepIntegration;
 import se.sundsvall.webmessagesender.service.mapper.OepMapper;
+
+import javax.xml.datatype.DatatypeConfigurationException;
 
 @ExtendWith(MockitoExtension.class)
 class WebMessageServiceTest {
@@ -149,7 +150,7 @@ class WebMessageServiceTest {
 		assertThat(webMessageEntityCaptor.getValue().getExternalReferences())
 			.hasSize(1)
 			.extracting(ExternalReferenceEntity::getId, ExternalReferenceEntity::getKey, ExternalReferenceEntity::getValue)
-			.containsExactly(tuple(0l, key, value));
+			.containsExactly(tuple(0L, key, value));
 	}
 	
 	@Test

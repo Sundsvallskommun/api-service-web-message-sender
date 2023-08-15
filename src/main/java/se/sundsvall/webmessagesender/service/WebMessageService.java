@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.ws.soap.SOAPFaultException;
+import jakarta.xml.ws.soap.SOAPFaultException;
 
 import feign.codec.DecodeException;
 import org.slf4j.Logger;
