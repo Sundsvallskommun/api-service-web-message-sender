@@ -1,6 +1,5 @@
 package se.sundsvall.webmessagesender.integration.oep;
 import feign.jaxb.JAXBContextFactory;
-import feign.jaxb.JAXBContextInstantationMode;
 import feign.soap.SOAPDecoder;
 import jakarta.xml.soap.SOAPConstants;
 
@@ -18,7 +17,7 @@ import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 @Import(FeignConfiguration.class)
 public class OepIntegrationConfiguration {
 
-	private static final JAXBContextFactory JAXB_FACTORY = new JAXBContextFactory.Builder().withJAXBContextInstantiationMode(JAXBContextInstantationMode.PACKAGE).build();
+	private static final JAXBContextFactory JAXB_FACTORY = new JAXBContextFactory.Builder().build();
 
 	private static final SOAPEncoder.Builder SOAP_ENCODER_BUILDER = new SOAPEncoder.Builder()
 		.withFormattedOutput(false)
