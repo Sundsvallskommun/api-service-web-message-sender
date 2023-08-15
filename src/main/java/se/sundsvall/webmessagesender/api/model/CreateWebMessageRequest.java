@@ -1,16 +1,14 @@
 package se.sundsvall.webmessagesender.api.model;
 
-import java.util.List;
-import java.util.Objects;
-
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 import se.sundsvall.webmessagesender.api.validation.ValidExternalReferences;
+
+import java.util.List;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "CreateWebMessageRequest model")

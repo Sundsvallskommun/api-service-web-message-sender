@@ -1,15 +1,14 @@
 package se.sundsvall.webmessagesender.api.validation;
 
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+import se.sundsvall.webmessagesender.api.validation.impl.ValidFileSizeConstraintValidator;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import javax.validation.Constraint;
-import javax.validation.Payload;
-
-import se.sundsvall.webmessagesender.api.validation.impl.ValidFileSizeConstraintValidator;
 
 @Documented
 @Target({ ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE })

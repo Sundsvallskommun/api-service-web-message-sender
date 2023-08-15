@@ -1,19 +1,17 @@
 package se.sundsvall.webmessagesender.api.validation.impl;
 
-import static org.apache.commons.lang3.StringUtils.isNoneBlank;
-import static org.springframework.util.CollectionUtils.isEmpty;
-import static se.sundsvall.webmessagesender.service.ServiceConstants.REFERENCE_FLOW_INSTANCE_ID;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import org.apache.commons.lang3.StringUtils;
+import se.sundsvall.webmessagesender.api.model.ExternalReference;
+import se.sundsvall.webmessagesender.api.validation.ValidExternalReferences;
 
 import java.util.List;
 import java.util.function.Predicate;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
-import org.apache.commons.lang3.StringUtils;
-
-import se.sundsvall.webmessagesender.api.model.ExternalReference;
-import se.sundsvall.webmessagesender.api.validation.ValidExternalReferences;
+import static org.apache.commons.lang3.StringUtils.isNoneBlank;
+import static org.springframework.util.CollectionUtils.isEmpty;
+import static se.sundsvall.webmessagesender.service.ServiceConstants.REFERENCE_FLOW_INSTANCE_ID;
 
 public class ValidExternalReferencesConstraintValidator implements ConstraintValidator<ValidExternalReferences, List<ExternalReference>> {
 	private static final String CUSTOM_ERROR_MESSAGE = String.format("element with key '%s' must have value of numeric type", REFERENCE_FLOW_INSTANCE_ID);

@@ -1,17 +1,17 @@
 package se.sundsvall.webmessagesender.integration.db;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import se.sundsvall.webmessagesender.Application;
 import se.sundsvall.webmessagesender.integration.db.model.AttachmentEntity;
 import se.sundsvall.webmessagesender.integration.db.model.ExternalReferenceEntity;
 import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
 
-import javax.transaction.Transactional;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -20,13 +20,15 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 /**
  * WebMessage repository tests.
  *
  * @see src/test/resources/db/scripts/WebMessageRepositoryTest.sql for data setup.
  */
-@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = NONE)
 @ActiveProfiles("junit")
 @Sql(scripts = {
         "/db/scripts/truncate.sql",
@@ -146,7 +148,7 @@ class WebMessageRepositoryTest {
         final var exception = assertThrows(DataIntegrityViolationException.class, () -> webMessageRepository.save(webMessageEntity));
 
         // Verification
-        assertThat(exception.getMostSpecificCause()).hasMessageMatching("^\\(conn=(.*)\\) Duplicate entry \'key1-value1-(.*)\' for key \'unique_external_reference\'$");
+        assertThat(exception.getMostSpecificCause()).hasMessageMatching("^\\(conn=(.*)\\) Duplicate entry \'(.*)-key1-value1\' for key \'unique_external_reference\'$");
     }
 
     @Test
