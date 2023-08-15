@@ -21,7 +21,8 @@
 		<!-- Service properties -->
 		<jaxb2-maven-plugin.version>3.1.0</jaxb2-maven-plugin.version>
 		<jaxb2-fluent-api.version>3.0</jaxb2-fluent-api.version>
-		<testcontainers.version>1.18.1</testcontainers.version>
+		<sun-xml-bind.version>3.0.2</sun-xml-bind.version>
+		<testcontainers.version>1.18.0</testcontainers.version>
 		<overviewproject.mimetypes.version>1.0.4</overviewproject.mimetypes.version>
 	</properties>
 	<dependencies>
@@ -75,19 +76,18 @@
 	<build>
 		<plugins>
 			<!-- Generate java from wsdl -->
-			<!-- Generate java from wsdl -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jaxb2-maven-plugin</artifactId>
 				<version>${jaxb2-maven-plugin.version}</version>
-				<!-- Enables fluent builder for generated classes -->
-				<dependencies>
-					<dependency>
-						<groupId>org.jvnet.jaxb2_commons</groupId>
-						<artifactId>jaxb2-fluent-api</artifactId>
-						<version>${jaxb2-fluent-api.version}</version>
-					</dependency>
-				</dependencies>
+			    <!-- Enables fluent builder for generated classes -->
+			    <dependencies>
+			        <dependency>
+			            <groupId>org.jvnet.jaxb2_commons</groupId>
+			            <artifactId>jaxb2-fluent-api</artifactId>
+			            <version>${jaxb2-fluent-api.version}</version>
+			        </dependency>
+			    </dependencies>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
@@ -100,7 +100,6 @@
 					<!-- Enable fluent -->
 					<arguments>
 						<argument>-Xfluent-api</argument>
-						<argument>-wsdl</argument>
 					</arguments>
 					<outputDirectory>${project.build.directory}/generated-sources/</outputDirectory>
 					<packageName>se.sundsvall.webmessagesender.generatedsources.oep</packageName>

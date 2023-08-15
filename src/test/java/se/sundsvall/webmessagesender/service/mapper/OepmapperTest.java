@@ -27,7 +27,7 @@ class OepmapperTest {
 		final var flowInstanceId = 1337;
 		final var attachment = create().withBase64Data(base64Data).withFileName("fileName").withMimeType("mimeType");
 		final var addMessage = toAddMessage(message, flowInstanceId, List.of(attachment));
-		final var base64binary = MAPPER.convertValue(attachment.getBase64Data(), byte[].class);;
+		final var base64binary = MAPPER.convertValue(attachment.getBase64Data(), byte[].class);
 		
 		assertThat(addMessage.getExternalID()).isNull();
 		assertThat(addMessage.getPrincipal()).isNull();
