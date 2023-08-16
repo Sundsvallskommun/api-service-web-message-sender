@@ -25,8 +25,8 @@ class CertificateTest {
 	private static final int MONTHS_UNTIL_EXPIRATION = 1;
 
 	private static CertificateFactory FACTORY;
-	private static Calendar CALENDAR = Calendar.getInstance();
-	private static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final Calendar CALENDAR = Calendar.getInstance();
+	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@BeforeAll
 	static void initialize() throws Exception {

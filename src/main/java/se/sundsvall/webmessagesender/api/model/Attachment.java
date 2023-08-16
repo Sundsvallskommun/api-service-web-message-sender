@@ -1,12 +1,11 @@
 package se.sundsvall.webmessagesender.api.model;
 
-import java.util.Objects;
-
-import javax.validation.constraints.NotBlank;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import se.sundsvall.dept44.common.validators.annotation.ValidBase64;
 import se.sundsvall.webmessagesender.api.validation.ValidFileSize;
+
+import java.util.Objects;
 
 @Schema(description = "File attachment")
 public class Attachment {

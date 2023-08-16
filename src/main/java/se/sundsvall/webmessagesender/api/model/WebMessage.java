@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Schema(description = "WebMessage model")
 public class WebMessage {
@@ -25,6 +26,7 @@ public class WebMessage {
 	private List<ExternalReference> externalReferences;
 
 	@Schema(description = "Created timestamp", accessMode = READ_ONLY)
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private OffsetDateTime created;
 
 	@ArraySchema(schema = @Schema(implementation = Attachment.class))
