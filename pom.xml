@@ -21,7 +21,6 @@
 		<!-- Service properties -->
 		<jaxb2-maven-plugin.version>3.1.0</jaxb2-maven-plugin.version>
 		<jaxb2-fluent-api.version>3.0</jaxb2-fluent-api.version>
-		<testcontainers.version>1.19.0</testcontainers.version>
 		<overviewproject.mimetypes.version>1.0.4</overviewproject.mimetypes.version>
 	</properties>
 	<dependencies>
@@ -61,14 +60,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
-			<artifactId>testcontainers</artifactId>
-			<version>${testcontainers.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
 			<artifactId>mariadb</artifactId>
-			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
