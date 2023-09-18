@@ -15,7 +15,6 @@
 	<properties>
 		<!-- Pipeline properties -->
 		<docker.image.name>ms-web-message-sender</docker.image.name>
-		<published.container.port.sandbox>9726</published.container.port.sandbox>
 		<published.container.port.test>8727</published.container.port.test>
 		<published.container.port.production>8726</published.container.port.production>
 		<!-- Service properties -->
