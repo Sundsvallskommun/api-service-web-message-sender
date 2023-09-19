@@ -27,29 +27,29 @@
         oep_message_id integer,
         created datetime(6),
         id varchar(255) not null,
-        message varchar(255),
         party_id varchar(255),
+        message longtext,
         primary key (id)
     ) engine=InnoDB;
 
-    create index external_reference_ref_key_index
+    create index external_reference_ref_key_index 
        on external_reference (ref_key);
 
-    create index external_reference_ref_value_index
+    create index external_reference_ref_value_index 
        on external_reference (ref_value);
 
-    alter table if exists external_reference
-       add constraint unique_external_reference unique (parent_id, ref_key, ref_value);
+    alter table if exists external_reference 
+       add constraint unique_external_reference unique (ref_key, ref_value, parent_id);
 
-    create index web_message_party_id_index
+    create index web_message_party_id_index 
        on web_message (party_id);
 
-    alter table if exists attachment
-       add constraint fk_attachment_parent_id_web_message_id
-       foreign key (parent_id)
+    alter table if exists attachment 
+       add constraint fk_attachment_parent_id_web_message_id 
+       foreign key (parent_id) 
        references web_message (id);
 
-    alter table if exists external_reference
-       add constraint fk_external_reference_parent_id_web_message_id
-       foreign key (parent_id)
+    alter table if exists external_reference 
+       add constraint fk_external_reference_parent_id_web_message_id 
+       foreign key (parent_id) 
        references web_message (id);
