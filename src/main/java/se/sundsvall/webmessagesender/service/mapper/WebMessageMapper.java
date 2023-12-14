@@ -18,7 +18,7 @@ import se.sundsvall.webmessagesender.integration.db.model.AttachmentEntity;
 import se.sundsvall.webmessagesender.integration.db.model.ExternalReferenceEntity;
 import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
 
-public class WebMessageMapper {
+public final class WebMessageMapper {
 
 	private WebMessageMapper() {}
 
@@ -60,14 +60,14 @@ public class WebMessageMapper {
 	}
 
 	private static AttachmentEntity toAttachmentEntity(Attachment attachment) {
-		byte[] byteArray = decodeBase64(attachment.getBase64Data());
-		
+		final byte[] byteArray = decodeBase64(attachment.getBase64Data());
+
 		return AttachmentEntity.create()
 			.withFile(byteArray)
 			.withFileName(attachment.getFileName())
 			.withMimeType(detectMimeType(attachment.getFileName(), byteArray));
 	}
-	
+
 	private static List<ExternalReferenceEntity> toExternalReferenceEntities(List<ExternalReference> externalReferences) {
 		return Optional.ofNullable(externalReferences).orElse(emptyList()).stream()
 			.distinct() // Remove duplicates

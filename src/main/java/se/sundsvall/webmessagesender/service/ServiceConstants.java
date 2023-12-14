@@ -1,6 +1,6 @@
 package se.sundsvall.webmessagesender.service;
 
-public class ServiceConstants {
+public final class ServiceConstants {
 
 	private ServiceConstants() {}
 

@@ -23,9 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import jakarta.xml.soap.Detail;
-import jakarta.xml.soap.SOAPFault;
-import jakarta.xml.ws.soap.SOAPFaultException;
+import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +38,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.Status;
 import org.zalando.problem.ThrowableProblem;
 
+import jakarta.xml.soap.Detail;
+import jakarta.xml.soap.SOAPFault;
+import jakarta.xml.ws.soap.SOAPFaultException;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.generatedsources.oep.AddMessage;
@@ -50,8 +51,6 @@ import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
 import se.sundsvall.webmessagesender.integration.oep.OepIntegration;
 import se.sundsvall.webmessagesender.service.mapper.OepMapper;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-
 @ExtendWith(MockitoExtension.class)
 class WebMessageServiceTest {
 
@@ -60,25 +59,28 @@ class WebMessageServiceTest {
 
 	@Mock
 	private OepIntegration oepClient;
-	
+
 	@Mock
 	private AddMessageResponse addMessageResponse;
-	
+
 	@Mock
 	private SOAPFaultException soapFaultException;
-	
+
 	@Mock
 	private SOAPFault soapFault;
-	
+
 	@Mock
 	private Detail detail;
 
 	@InjectMocks
 	private WebMessageService webMessageService;
 
-	@Captor ArgumentCaptor<AddMessage> addMessageCaptor;
-	@Captor ArgumentCaptor<WebMessageEntity> webMessageEntityCaptor;
-	
+	@Captor
+	private ArgumentCaptor<AddMessage> addMessageCaptor;
+
+	@Captor
+	private ArgumentCaptor<WebMessageEntity> webMessageEntityCaptor;
+
 	@Test
 	void createWebMessageWithoutFlowInstanceId() {
 
@@ -99,12 +101,12 @@ class WebMessageServiceTest {
 		verify(webMessageRepository).save(webMessageEntity);
 		verifyNoInteractions(oepClient);
 		verifyNoMoreInteractions(webMessageRepository);
-		
+
 		assertThat(result).isNotNull();
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"flowInstanceId", "flowinstanceid", "FLOWINSTANCEID"})
+	@ValueSource(strings = { "flowInstanceId", "flowinstanceid", "FLOWINSTANCEID" })
 	void createWebMessageWithFlowInstanceId(String key) {
 
 		// Setup
@@ -112,7 +114,7 @@ class WebMessageServiceTest {
 		final var partyId = UUID.randomUUID().toString();
 		final var message = "Message";
 		final var oepMessageId = Integer.MAX_VALUE;
-		
+
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withExternalReferences(List.of(ExternalReference.create().withKey(key).withValue(value)))
 			.withMessage(message)
@@ -141,7 +143,7 @@ class WebMessageServiceTest {
 		assertThat(addMessageCaptor.getValue().getPrincipal()).isNull();
 		assertThat(addMessageCaptor.getValue().getMessage().getAttachments()).isNullOrEmpty();
 		assertThat(addMessageCaptor.getValue().getMessage().getUserID()).isNull();
-		
+
 		assertThat(webMessageEntityCaptor.getValue().getCreated()).isNull();
 		assertThat(webMessageEntityCaptor.getValue().getId()).isNull();
 		assertThat(webMessageEntityCaptor.getValue().getMessage()).isEqualTo(message);
@@ -152,10 +154,10 @@ class WebMessageServiceTest {
 			.extracting(ExternalReferenceEntity::getId, ExternalReferenceEntity::getKey, ExternalReferenceEntity::getValue)
 			.containsExactly(tuple(0L, key, value));
 	}
-	
+
 	@Test
 	void createWebMessageThrowsSOAPFaultException() {
-		
+
 		// Setup
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("123456")))
@@ -168,7 +170,7 @@ class WebMessageServiceTest {
 		when(soapFault.getFaultString()).thenReturn("Bogus error");
 		when(soapFault.getDetail()).thenReturn(detail);
 		when(detail.getDetailEntries()).thenReturn(Collections.emptyIterator());
-		
+
 		// Call
 		final var problem = assertThrows(ThrowableProblem.class, () -> webMessageService.createWebMessage(createWebMessageRequest));
 
@@ -177,14 +179,14 @@ class WebMessageServiceTest {
 		assertThat(problem.getTitle()).isEqualTo(Status.INTERNAL_SERVER_ERROR.getReasonPhrase());
 		assertThat(problem.getStatus()).isEqualTo(Status.INTERNAL_SERVER_ERROR);
 		assertThat(problem.getDetail()).isEqualTo("Bogus error");
-		
+
 		verify(oepClient).addMessage(any());
 		verifyNoInteractions(webMessageRepository);
 	}
 
 	@Test
 	void createWebMessageThrowsDatatypeConfigurationException() {
-		
+
 		// Setup
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("123456")))
@@ -203,11 +205,11 @@ class WebMessageServiceTest {
 			assertThat(problem.getTitle()).isEqualTo(Status.INTERNAL_SERVER_ERROR.getReasonPhrase());
 			assertThat(problem.getStatus()).isEqualTo(Status.INTERNAL_SERVER_ERROR);
 			assertThat(problem.getDetail()).isEqualTo("Configuration error in service");
-			
+
 			verifyNoInteractions(oepClient, webMessageRepository);
 		}
 	}
-	
+
 	@Test
 	void deleteWebMessageById() {
 
@@ -275,7 +277,7 @@ class WebMessageServiceTest {
 
 		// Call
 		final var problem = assertThrows(ThrowableProblem.class, () -> webMessageService.getWebMessageById(id));
-		
+
 		// Verification
 		assertThat(problem).isNotNull();
 		assertThat(problem.getTitle()).isEqualTo(Status.NOT_FOUND.getReasonPhrase());
@@ -283,7 +285,7 @@ class WebMessageServiceTest {
 		assertThat(problem.getDetail()).isEqualTo(format(ERROR_WEB_MESSAGE_NOT_FOUND, id));
 		verify(webMessageRepository).findById(id);
 	}
-	
+
 	@Test
 	void getWebMessagesByPartyId() {
 
