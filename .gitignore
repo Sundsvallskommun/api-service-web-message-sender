@@ -10,6 +10,7 @@
 .classpath
 .settings/
 bin/
+.factorypath
 
 # Log file
 log/
@@ -33,3 +34,4 @@ hs_err_pid*
 
 # Environent variables
 .env
+

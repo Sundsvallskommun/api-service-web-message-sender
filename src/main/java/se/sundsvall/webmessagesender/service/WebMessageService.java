@@ -15,16 +15,15 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import jakarta.xml.ws.soap.SOAPFaultException;
 
-import feign.codec.DecodeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 
+import feign.codec.DecodeException;
+import jakarta.xml.ws.soap.SOAPFaultException;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.api.model.WebMessage;
@@ -33,48 +32,51 @@ import se.sundsvall.webmessagesender.integration.oep.OepIntegration;
 
 @Service
 public class WebMessageService {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebMessageService.class);
 
-	@Autowired
-	private WebMessageRepository webMessageRepository;
+	private final WebMessageRepository webMessageRepository;
+	private final OepIntegration oepIntegration;
 
-	@Autowired
-	private OepIntegration oepIntegration;
-	
+	public WebMessageService(WebMessageRepository webMessageRepository, OepIntegration oepIntegration) {
+		this.webMessageRepository = webMessageRepository;
+		this.oepIntegration = oepIntegration;
+	}
+
 	public WebMessage createWebMessage(final CreateWebMessageRequest createWebMessageRequest) {
-		Integer oepMessageId = addOepMessage(createWebMessageRequest);
+		final var oepMessageId = addOepMessage(createWebMessageRequest);
 		return toWebMessage(webMessageRepository.save(toWebMessageEntity(createWebMessageRequest, oepMessageId)));
 	}
 
 	private Integer addOepMessage(CreateWebMessageRequest createWebMessageRequest) {
 		try {
-			Optional<Integer> flowInstanceid = retrieveFlowInstanceId(createWebMessageRequest);
+			final var flowInstanceid = retrieveFlowInstanceId(createWebMessageRequest);
 			if (flowInstanceid.isPresent()) {
 				return oepIntegration.addMessage(toAddMessage(createWebMessageRequest.getMessage(), flowInstanceid.get(), createWebMessageRequest.getAttachments()))
-						.getMessageID();
+					.getMessageID();
 			}
 			return null;
-		} catch (DecodeException e) {
-			if (e.getCause() instanceof SOAPFaultException soapFaultException) {
+		} catch (final DecodeException e) {
+			if (e.getCause() instanceof final SOAPFaultException soapFaultException) {
 				throw convertToThrowableProblem(soapFaultException);
 			}
 			throw e;
-		} catch (DatatypeConfigurationException e) {
+		} catch (final DatatypeConfigurationException e) {
 			LOGGER.error("Could not obtain an instance of DatatypeFactory", e);
 			throw Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "Configuration error in service");
-		} catch (SOAPFaultException soapFaultException) {
+		} catch (final SOAPFaultException soapFaultException) {
 			throw convertToThrowableProblem(soapFaultException);
 		}
 	}
 
 	private Optional<Integer> retrieveFlowInstanceId(CreateWebMessageRequest createWebMessageRequest) {
 		return createWebMessageRequest.getExternalReferences().stream()
-				.filter(reference -> REFERENCE_FLOW_INSTANCE_ID.equalsIgnoreCase(reference.getKey()))
-				.map(ExternalReference::getValue)
-				.map(Integer::parseInt)
-				.findFirst();
+			.filter(reference -> REFERENCE_FLOW_INSTANCE_ID.equalsIgnoreCase(reference.getKey()))
+			.map(ExternalReference::getValue)
+			.map(Integer::parseInt)
+			.findFirst();
 	}
-	
+
 	public WebMessage getWebMessageById(final String id) {
 		return toWebMessage(webMessageRepository.findById(id).orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(ERROR_WEB_MESSAGE_NOT_FOUND, id))));
 	}

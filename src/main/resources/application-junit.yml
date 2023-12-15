@@ -1,0 +1,31 @@
+attachment:
+  maximum:
+    bytesize: 10
+integration:
+  oep:
+    connectTimeout: 10
+    password: oep.client.password
+    readTimeout: 20
+    url: oep.client.url
+    username: oep.client.username
+spring:
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mariadb:10.6.4:///
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        hbm2ddl:
+          schema-generation:
+            script:
+              append: false
+      jakarta:
+        persistence:
+          schema-generation:
+            create-source: metadata
+            database:
+              action: update
+            scripts:
+              action: create
+              create-target: target/database/generated-schema.sql

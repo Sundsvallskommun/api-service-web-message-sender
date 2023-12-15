@@ -1,16 +1,19 @@
 package se.sundsvall.webmessagesender.api.model;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
+import java.util.List;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 import se.sundsvall.webmessagesender.api.validation.ValidExternalReferences;
 
-import java.util.List;
-import java.util.Objects;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(NON_NULL)
 @Schema(description = "CreateWebMessageRequest model")
 public class CreateWebMessageRequest {
 
@@ -86,30 +89,35 @@ public class CreateWebMessageRequest {
 	}
 
 	@Override
-	public int hashCode() { return Objects.hash(externalReferences, message, partyId, attachments); }
+	public int hashCode() {
+		return Objects.hash(externalReferences, message, partyId, attachments);
+	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		CreateWebMessageRequest other = (CreateWebMessageRequest) obj;
+		}
+		final CreateWebMessageRequest other = (CreateWebMessageRequest) obj;
 		return Objects.equals(externalReferences, other.externalReferences)
-				&& Objects.equals(message, other.message)
-				&& Objects.equals(partyId, other.partyId)
-				&& Objects.equals(attachments, other.attachments);
+			&& Objects.equals(message, other.message)
+			&& Objects.equals(partyId, other.partyId)
+			&& Objects.equals(attachments, other.attachments);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("CreateWebMessageRequest [partyId=").append(partyId)
-				.append(", message=").append(message)
-				.append(", externalReferences=").append(externalReferences)
-				.append(", attachments=").append(attachments)
+			.append(", message=").append(message)
+			.append(", externalReferences=").append(externalReferences)
+			.append(", attachments=").append(attachments)
 			.append("]");
 		return builder.toString();
 	}
