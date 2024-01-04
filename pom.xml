@@ -99,7 +99,6 @@
 					<sourceType>wsdl</sourceType>
 				</configuration>
 			</plugin>
-
 			<!-- Need to add excludes for test files of type doc, docx and pdf -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
