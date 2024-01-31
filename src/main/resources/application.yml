@@ -31,7 +31,10 @@ spring:
         persistence:
           schema-generation:
             database:
-              action: none
+              action: validate
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
 springdoc:
   swagger-ui:
     operationsSorter: method

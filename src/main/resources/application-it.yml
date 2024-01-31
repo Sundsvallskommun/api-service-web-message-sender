@@ -9,6 +9,8 @@ spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     url: jdbc:tc:mariadb:10.6.4:///
+  flyway:
+    enabled: true
   jpa:
     properties:
       hibernate:
@@ -22,7 +24,7 @@ spring:
           schema-generation:
             create-source: metadata
             database:
-              action: update
+              action: validate
             scripts:
               action: create
               create-target: target/database/generated-schema.sql
