@@ -3,11 +3,13 @@ integration:
     connectTimeout: 5
     readTimeout: 30
 logbook:
-  exclusionfilters:
+  body-filters:
     json-path: 
-      '$.attachments[*].base64Data': '[base64]'
+      - key: '$.attachments[*].base64Data'
+        value: '[base64]'
     x-path:
-      '//encodedData[string-length(text()) > 0]': '[base64]'
+      - key: '//encodedData[string-length(text()) > 0]'
+        value: '[base64]'
 logging:
   level:
     root: INFO
