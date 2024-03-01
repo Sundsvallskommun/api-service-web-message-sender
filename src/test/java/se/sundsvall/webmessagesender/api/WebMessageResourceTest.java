@@ -34,17 +34,12 @@ class WebMessageResourceTest {
 	@Autowired
 	private WebTestClient webTestClient;
 
-	@LocalServerPort
-	private int port;
-
 	@Test
 	void createWebMessage() {
 
 		// Mock
 		final var id = UUID.randomUUID().toString();
 		when(webMessageService.createWebMessage(any())).thenReturn(WebMessage.create().withId(id));
-
-		final var expectedLocationURL = "http://localhost:".concat(String.valueOf(port)).concat("/webmessages/").concat(id);
 
 		// Parameter values
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
@@ -58,7 +53,7 @@ class WebMessageResourceTest {
 			.bodyValue(createWebMessageRequest)
 			.exchange()
 			.expectStatus().isCreated()
-			.expectHeader().location(expectedLocationURL)
+			.expectHeader().location("/webmessages/" +id)
 			.expectHeader().contentType(ALL_VALUE)
 			.expectBody().isEmpty();
 

@@ -35,13 +35,11 @@ class CreateWebMessageIT extends AbstractAppTest {
             .withHttpMethod(POST)
             .withRequest("request.json")
             .withExpectedResponseStatus(CREATED)
-            .withExpectedResponseHeader(LOCATION, List.of("^http://(.*)/webmessages/(.*)$"))
-            .sendRequestAndVerifyResponse()
-            .andVerifyThat(() -> {
-            	repository.findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated("flowInstanceId", "356434").stream()
-            		.allMatch(message -> isNull(message.getAttachments()));
-                return true;
-            });
+            .withExpectedResponseHeader(LOCATION, List.of("^/webmessages/(.*)$"))
+            .sendRequestAndVerifyResponse();
+
+        var webMessages = repository.findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated("flowInstanceId", "356434");
+        assertThat(webMessages).hasSize(1);
     }
 
     @Test
@@ -73,12 +71,10 @@ class CreateWebMessageIT extends AbstractAppTest {
             .withHttpMethod(POST)
             .withRequest("request.json")
             .withExpectedResponseStatus(CREATED)
-            .withExpectedResponseHeader(LOCATION, List.of("^http://(.*)/webmessages/(.*)$"))
-            .sendRequestAndVerifyResponse()
-            .andVerifyThat(() -> {
-                assertThat(repository.findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated("flowInstanceId", "2154"))
-                	.extracting(WebMessageEntity::getAttachments).hasSize(1);
-                return true;
-            });
+            .withExpectedResponseHeader(LOCATION, List.of("^/webmessages/(.*)$"))
+            .sendRequestAndVerifyResponse();
+
+        assertThat(repository.findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated("flowInstanceId", "2154"))
+            .extracting(WebMessageEntity::getAttachments).hasSize(1);
     }
 }
