@@ -5,6 +5,7 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
+import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 
 import java.util.List;
 
@@ -39,11 +40,11 @@ import se.sundsvall.webmessagesender.service.WebMessageService;
 @Validated
 @RequestMapping("/webmessages")
 @Tag(name = "WebMessages", description = "Web messages")
-public class WebMessageResource {
+class WebMessageResource {
 
 	private final WebMessageService webMessageService;
 
-	public WebMessageResource(WebMessageService webMessageService) {
+	WebMessageResource(final WebMessageService webMessageService) {
 		this.webMessageService = webMessageService;
 	}
 
@@ -54,10 +55,10 @@ public class WebMessageResource {
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "502", description = "Bad gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	public ResponseEntity<Void> createWebMessage(UriComponentsBuilder uriComponentsBuilder, @Valid @RequestBody CreateWebMessageRequest body) {
+	public ResponseEntity<Void> createWebMessage(@Valid @RequestBody final CreateWebMessageRequest request) {
 
 		return ResponseEntity
-			.created(uriComponentsBuilder.path("/webmessages/{id}").buildAndExpand(webMessageService.createWebMessage(body).getId()).toUri())
+			.created(fromPath("/webmessages/{id}").buildAndExpand(webMessageService.createWebMessage(request).getId()).toUri())
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}
