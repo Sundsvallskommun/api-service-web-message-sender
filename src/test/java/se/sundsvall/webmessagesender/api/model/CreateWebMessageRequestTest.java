@@ -1,10 +1,5 @@
 package se.sundsvall.webmessagesender.api.model;
 
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.UUID;
-
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCode;
@@ -13,6 +8,11 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetter
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
 
 class CreateWebMessageRequestTest {
 
@@ -33,16 +33,19 @@ class CreateWebMessageRequestTest {
 		final var message = "message";
 		final var partyId = UUID.randomUUID().toString();
 		final var attachments = List.of(Attachment.create());
+		final var oepInstance = "internal";
 
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withExternalReferences(externalReferences)
 			.withMessage(message)
+			.withOepInstance(oepInstance)
 			.withPartyId(partyId)
 			.withAttachments(attachments);
 
 		assertThat(createWebMessageRequest).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(createWebMessageRequest.getExternalReferences()).isEqualTo(externalReferences);
 		assertThat(createWebMessageRequest.getMessage()).isEqualTo(message);
+		assertThat(createWebMessageRequest.getOepInstance()).isEqualTo(oepInstance);
 		assertThat(createWebMessageRequest.getPartyId()).isEqualTo(partyId);
 		assertThat(createWebMessageRequest.getAttachments()).isEqualTo(attachments);
 	}

@@ -5,13 +5,16 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.validation.Valid;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
+import se.sundsvall.webmessagesender.api.validation.ValidExternalReferences;
+import se.sundsvall.webmessagesender.api.validation.ValidInstance;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
-import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
-import se.sundsvall.webmessagesender.api.validation.ValidExternalReferences;
 
 @JsonInclude(NON_NULL)
 @Schema(description = "CreateWebMessageRequest model")
@@ -23,6 +26,10 @@ public class CreateWebMessageRequest {
 
 	@Schema(description = "The message", example = "This is a message")
 	private String message;
+
+	@Schema(description = "Determines if the message should be added to the internal or external OeP instance", allowableValues = {"internal", "external"}, example = "internal")
+	@ValidInstance
+	private String oepInstance;
 
 	@ArraySchema(schema = @Schema(implementation = ExternalReference.class))
 	@ValidExternalReferences
@@ -62,6 +69,19 @@ public class CreateWebMessageRequest {
 		return this;
 	}
 
+	public String getOepInstance() {
+		return oepInstance;
+	}
+
+	public void setOepInstance(final String oepInstance) {
+		this.oepInstance = oepInstance;
+	}
+
+	public CreateWebMessageRequest withOepInstance(final String oepInstance) {
+		this.oepInstance = oepInstance;
+		return this;
+	}
+
 	public List<ExternalReference> getExternalReferences() {
 		return externalReferences;
 	}
@@ -89,36 +109,26 @@ public class CreateWebMessageRequest {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(externalReferences, message, partyId, attachments);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final CreateWebMessageRequest other = (CreateWebMessageRequest) obj;
-		return Objects.equals(externalReferences, other.externalReferences)
-			&& Objects.equals(message, other.message)
-			&& Objects.equals(partyId, other.partyId)
-			&& Objects.equals(attachments, other.attachments);
-	}
-
-	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("CreateWebMessageRequest [partyId=").append(partyId)
-			.append(", message=").append(message)
-			.append(", externalReferences=").append(externalReferences)
-			.append(", attachments=").append(attachments)
-			.append("]");
-		return builder.toString();
+		return "CreateWebMessageRequest{" +
+			"partyId='" + partyId + '\'' +
+			", message='" + message + '\'' +
+			", oepInstance='" + oepInstance + '\'' +
+			", externalReferences=" + externalReferences +
+			", attachments=" + attachments +
+			'}';
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		final CreateWebMessageRequest that = (CreateWebMessageRequest) o;
+		return Objects.equals(partyId, that.partyId) && Objects.equals(message, that.message) && Objects.equals(oepInstance, that.oepInstance) && Objects.equals(externalReferences, that.externalReferences) && Objects.equals(attachments, that.attachments);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(partyId, message, oepInstance, externalReferences, attachments);
 	}
 }

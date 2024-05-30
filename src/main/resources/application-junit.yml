@@ -4,10 +4,12 @@ attachment:
 integration:
   oep:
     connectTimeout: 10
-    password: oep.client.password
     readTimeout: 20
-    url: oep.client.url
     username: oep.client.username
+    external-password: oep.client.external.password
+    external-url: oep.client.external.url
+    internal-password: oep.client.internal.password
+    internal-url: oep.client.internal.url
 spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver

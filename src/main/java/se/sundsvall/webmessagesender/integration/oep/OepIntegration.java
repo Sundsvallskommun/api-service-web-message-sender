@@ -1,17 +1,31 @@
 package se.sundsvall.webmessagesender.integration.oep;
 
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.stereotype.Component;
 
 import se.sundsvall.webmessagesender.generatedsources.oep.AddMessage;
 import se.sundsvall.webmessagesender.generatedsources.oep.AddMessageResponse;
+import se.sundsvall.webmessagesender.integration.oep.client.OepExternalClient;
+import se.sundsvall.webmessagesender.integration.oep.client.OepInternalClient;
 
-@FeignClient(name = "oep.integration", url = "${integration.oep.url}", configuration = OepIntegrationConfiguration.class)
-public interface OepIntegration {
+@Component
+public class OepIntegration {
 
-	String TEXT_XML_UTF_8 = "text/xml; charset=UTF-8";
+	private final OepExternalClient oepExternalClient;
+	private final OepInternalClient oepInternalClient;
 
-	@PostMapping(consumes = TEXT_XML_UTF_8, produces = TEXT_XML_UTF_8)
-	AddMessageResponse addMessage(@RequestBody AddMessage addMessage);
+	public OepIntegration(final OepExternalClient oepExternalClient, final OepInternalClient oepInternalClient) {
+		this.oepExternalClient = oepExternalClient;
+		this.oepInternalClient = oepInternalClient;
+	}
+
+	public AddMessageResponse addMessage(final String instance, final AddMessage addMessage) {
+		if (instance.equalsIgnoreCase("internal")) {
+			return oepInternalClient.addMessage(addMessage);
+		}
+		if (instance.equalsIgnoreCase("external")) {
+			return oepExternalClient.addMessage(addMessage);
+		}
+		return null;
+	}
+
 }

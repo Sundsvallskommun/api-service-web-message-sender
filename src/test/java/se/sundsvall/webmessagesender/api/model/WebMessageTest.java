@@ -45,9 +45,11 @@ class WebMessageTest {
 		final var message = "message";
 		final var partyId = UUID.randomUUID().toString();
 		final var attachments = List.of(Attachment.create());
+		final var oepInstance = "internal";
 
 		final var webMessage = WebMessage.create()
 			.withCreated(created)
+			.withOepInstance(oepInstance)
 			.withId(id)
 			.withExternalReferences(externalReferences)
 			.withMessage(message)
@@ -57,6 +59,7 @@ class WebMessageTest {
 		assertThat(webMessage).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(webMessage.getCreated()).isEqualTo(created);
 		assertThat(webMessage.getId()).isEqualTo(id);
+		assertThat(webMessage.getOepInstance()).isEqualTo(oepInstance);
 		assertThat(webMessage.getExternalReferences()).isEqualTo(externalReferences);
 		assertThat(webMessage.getMessage()).isEqualTo(message);
 		assertThat(webMessage.getPartyId()).isEqualTo(partyId);

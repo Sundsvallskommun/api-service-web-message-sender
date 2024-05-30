@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.hibernate.Length;
-import org.hibernate.annotations.TimeZoneStorage;
-import org.hibernate.annotations.UuidGenerator;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +17,10 @@ import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+
+import org.hibernate.Length;
+import org.hibernate.annotations.TimeZoneStorage;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "web_message",
@@ -39,6 +39,9 @@ public class WebMessageEntity {
 
 	@Column(name = "message", length = Length.LONG32)
 	private String message;
+
+	@Column(name = "oep_instance")
+	private String oepInstance;
 
 	@Column(name = "created")
 	@TimeZoneStorage(NORMALIZE)
@@ -93,6 +96,19 @@ public class WebMessageEntity {
 
 	public WebMessageEntity withMessage(final String message) {
 		this.message = message;
+		return this;
+	}
+
+	public String getOepInstance() {
+		return oepInstance;
+	}
+
+	public void setOepInstance(final String oepInstance) {
+		this.oepInstance = oepInstance;
+	}
+
+	public WebMessageEntity withOepInstance(final String oepInstance) {
+		this.oepInstance = oepInstance;
 		return this;
 	}
 
@@ -156,31 +172,29 @@ public class WebMessageEntity {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(attachments, created, externalReferences, id, message, oepMessageId, partyId);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final WebMessageEntity other = (WebMessageEntity) obj;
-		return Objects.equals(attachments, other.attachments) && Objects.equals(created, other.created) && Objects.equals(externalReferences, other.externalReferences) && Objects.equals(id, other.id) && Objects.equals(message, other.message) && Objects
-			.equals(oepMessageId, other.oepMessageId) && Objects.equals(partyId, other.partyId);
-	}
-
-	@Override
 	public String toString() {
-		final var builder = new StringBuilder();
-		builder.append("WebMessageEntity [id=").append(id).append(", partyId=").append(partyId).append(", message=").append(message).append(", created=").append(created).append(", oepMessageId=").append(oepMessageId).append(", externalReferences=").append(
-			externalReferences).append(", attachments=").append(attachments).append("]");
-		return builder.toString();
+		return "WebMessageEntity{" +
+			"id='" + id + '\'' +
+			", partyId='" + partyId + '\'' +
+			", message='" + message + '\'' +
+			", oepInstance='" + oepInstance + '\'' +
+			", created=" + created +
+			", oepMessageId=" + oepMessageId +
+			", externalReferences=" + externalReferences +
+			", attachments=" + attachments +
+			'}';
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		final WebMessageEntity that = (WebMessageEntity) o;
+		return Objects.equals(id, that.id) && Objects.equals(partyId, that.partyId) && Objects.equals(message, that.message) && Objects.equals(oepInstance, that.oepInstance) && Objects.equals(created, that.created) && Objects.equals(oepMessageId, that.oepMessageId) && Objects.equals(externalReferences, that.externalReferences) && Objects.equals(attachments, that.attachments);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, partyId, message, oepInstance, created, oepMessageId, externalReferences, attachments);
 	}
 }

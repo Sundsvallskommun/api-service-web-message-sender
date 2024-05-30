@@ -6,9 +6,10 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Schema(description = "WebMessage model")
 public class WebMessage {
@@ -21,6 +22,9 @@ public class WebMessage {
 
 	@Schema(description = "The message", example = "This is a message")
 	private String message;
+
+	@Schema(description = "The oep instance", example = "internal")
+	private String oepInstance;
 
 	@ArraySchema(schema = @Schema(implementation = ExternalReference.class))
 	private List<ExternalReference> externalReferences;
@@ -75,6 +79,19 @@ public class WebMessage {
 		return this;
 	}
 
+	public String getOepInstance() {
+		return oepInstance;
+	}
+
+	public void setOepInstance(final String oepInstance) {
+		this.oepInstance = oepInstance;
+	}
+
+	public WebMessage withOepInstance(final String oepInstance) {
+		this.oepInstance = oepInstance;
+		return this;
+	}
+
 	public List<ExternalReference> getExternalReferences() {
 		return externalReferences;
 	}
@@ -115,35 +132,28 @@ public class WebMessage {
 	}
 
 	@Override
-	public int hashCode() { return Objects.hash(created, externalReferences, id, message, partyId, attachments); }
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		WebMessage other = (WebMessage) obj;
-		return Objects.equals(created, other.created)
-				&& Objects.equals(externalReferences, other.externalReferences)
-				&& Objects.equals(id, other.id)
-				&& Objects.equals(message, other.message)
-				&& Objects.equals(partyId, other.partyId)
-				&& Objects.equals(attachments, other.attachments);
+	public String toString() {
+		return "WebMessage{" +
+			"id='" + id + '\'' +
+			", partyId='" + partyId + '\'' +
+			", message='" + message + '\'' +
+			", oepInstance='" + oepInstance + '\'' +
+			", externalReferences=" + externalReferences +
+			", created=" + created +
+			", attachments=" + attachments +
+			'}';
 	}
 
 	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("WebMessage [id=").append(id)
-				.append(", partyId=").append(partyId)
-				.append(", message=").append(message)
-				.append(", externalReferences=").append(externalReferences)
-				.append(", created=").append(created)
-				.append(", attachments=").append(attachments)
-				.append("]");
-		return builder.toString();
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		final WebMessage that = (WebMessage) o;
+		return Objects.equals(id, that.id) && Objects.equals(partyId, that.partyId) && Objects.equals(message, that.message) && Objects.equals(oepInstance, that.oepInstance) && Objects.equals(externalReferences, that.externalReferences) && Objects.equals(created, that.created) && Objects.equals(attachments, that.attachments);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, partyId, message, oepInstance, externalReferences, created, attachments);
 	}
 }

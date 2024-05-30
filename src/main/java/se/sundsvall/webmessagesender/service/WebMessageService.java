@@ -3,7 +3,7 @@ package se.sundsvall.webmessagesender.service;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.webmessagesender.integration.oep.OepSoapFaultMapper.convertToThrowableProblem;
+import static se.sundsvall.webmessagesender.integration.oep.mapper.OepSoapFaultMapper.convertToThrowableProblem;
 import static se.sundsvall.webmessagesender.service.ServiceConstants.ERROR_WEB_MESSAGE_NOT_FOUND;
 import static se.sundsvall.webmessagesender.service.ServiceConstants.REFERENCE_FLOW_INSTANCE_ID;
 import static se.sundsvall.webmessagesender.service.mapper.OepMapper.toAddMessage;
@@ -16,19 +16,21 @@ import java.util.Optional;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import jakarta.xml.ws.soap.SOAPFaultException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 
-import feign.codec.DecodeException;
-import jakarta.xml.ws.soap.SOAPFaultException;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.api.model.WebMessage;
 import se.sundsvall.webmessagesender.integration.db.WebMessageRepository;
 import se.sundsvall.webmessagesender.integration.oep.OepIntegration;
+
+import feign.codec.DecodeException;
 
 @Service
 public class WebMessageService {
@@ -36,6 +38,7 @@ public class WebMessageService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebMessageService.class);
 
 	private final WebMessageRepository webMessageRepository;
+
 	private final OepIntegration oepIntegration;
 
 	public WebMessageService(WebMessageRepository webMessageRepository, OepIntegration oepIntegration) {
@@ -52,7 +55,7 @@ public class WebMessageService {
 		try {
 			final var flowInstanceid = retrieveFlowInstanceId(createWebMessageRequest);
 			if (flowInstanceid.isPresent()) {
-				return oepIntegration.addMessage(toAddMessage(createWebMessageRequest.getMessage(), flowInstanceid.get(), createWebMessageRequest.getAttachments()))
+				return oepIntegration.addMessage(createWebMessageRequest.getOepInstance(), toAddMessage(createWebMessageRequest.getMessage(), flowInstanceid.get(), createWebMessageRequest.getAttachments()))
 					.getMessageID();
 			}
 			return null;

@@ -1,5 +1,5 @@
 {
-  "name": "internal-oep",
+  "name": "oep-internal",
   "request": {
     "method": "POST",
     "url": "/internal-oepMock",
@@ -10,12 +10,12 @@
     },
     "bodyPatterns": [
       {
-        "matchesXPath": "//flowInstanceID[text()=356435]"
+        "matchesXPath": "//flowInstanceID[text()=356434]"
       }
     ]
   },
   "response": {
-    "status": 500,
-    "bodyFileName": "test3_instanceIdNotFound/response/addMessageResponse.xml"
+    "status": 200,
+    "bodyFileName": "test1_createInternalMessageSuccessful/response/addMessageResponse.xml"
   }
 }

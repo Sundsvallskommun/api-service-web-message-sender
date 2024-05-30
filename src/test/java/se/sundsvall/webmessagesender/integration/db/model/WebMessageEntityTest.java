@@ -1,6 +1,5 @@
 package se.sundsvall.webmessagesender.integration.db.model;
 
-import static org.assertj.core.api.Assertions.within;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEqualsExcluding;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCodeExcluding;
@@ -9,6 +8,7 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetter
 import static com.google.code.beanmatchers.BeanMatchers.registerValueGenerator;
 import static java.time.OffsetDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -31,11 +31,11 @@ class WebMessageEntityTest {
 	@Test
 	void testBean() {
 		assertThat(WebMessageEntity.class, allOf(
-				hasValidBeanConstructor(),
-				hasValidGettersAndSettersExcluding("externalReferences", "attachments"),
-				hasValidBeanHashCodeExcluding("externalReferences", "attachments"),
-				hasValidBeanEqualsExcluding("externalReferences", "attachments"),
-				hasValidBeanToStringExcluding("externalReferences", "attachments")));
+			hasValidBeanConstructor(),
+			hasValidGettersAndSettersExcluding("externalReferences", "attachments"),
+			hasValidBeanHashCodeExcluding("externalReferences", "attachments"),
+			hasValidBeanEqualsExcluding("externalReferences", "attachments"),
+			hasValidBeanToStringExcluding("externalReferences", "attachments")));
 	}
 
 	@Test
@@ -48,19 +48,22 @@ class WebMessageEntityTest {
 		final var partyId = UUID.randomUUID().toString();
 		final var oepMessageId = Integer.MAX_VALUE;
 		final var attachments = List.of(AttachmentEntity.create());
+		final var oepInstance = "internal";
 
 		final var webMessage = WebMessageEntity.create()
-				.withCreated(created)
-				.withId(id)
-				.withExternalReferences(externalReferences)
-				.withMessage(message)
-				.withPartyId(partyId)
-				.withOepMessageId(oepMessageId)
-				.withAttachments(attachments);
+			.withCreated(created)
+			.withOepInstance(oepInstance)
+			.withId(id)
+			.withExternalReferences(externalReferences)
+			.withMessage(message)
+			.withPartyId(partyId)
+			.withOepMessageId(oepMessageId)
+			.withAttachments(attachments);
 
 		assertThat(webMessage).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(webMessage.getCreated()).isEqualTo(created);
 		assertThat(webMessage.getId()).isEqualTo(id);
+		assertThat(webMessage.getOepInstance()).isEqualTo(oepInstance);
 		assertThat(webMessage.getExternalReferences()).isSameAs(externalReferences);
 		assertThat(webMessage.getMessage()).isEqualTo(message);
 		assertThat(webMessage.getPartyId()).isEqualTo(partyId);
@@ -74,7 +77,7 @@ class WebMessageEntityTest {
 		webMessage.prePersist();
 		assertThat(webMessage.getCreated()).isCloseTo(OffsetDateTime.now(), within(2, ChronoUnit.SECONDS));
 	}
-	
+
 	@Test
 	void testNoDirtOnCreatedBean() {
 		assertThat(WebMessageEntity.create()).hasAllNullFieldsOrProperties();

@@ -1,18 +1,19 @@
 {
-	"id": "37317c16-3fd6-11ed-b878-0242ac120002",
-	"partyId": "38a536ae-79e1-440e-b0c1-34ad1acbe411",
-	"externalReferences": [
-		{
-			"key": "common-key",
-			"value": "unique-value"
-		}
-	],
-	"created": "2022-09-29T11:08:23.766+02:00",
-	"attachments": [
-		{
-			"fileName": "test_image.jpg",
-			"mimeType": "image/jpeg",
-			"base64Data": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAeSURBVDhPY1Da6EMSYiBJNVDxqAZiQmw0lAZHKAEAaskfEED3lr0AAAAASUVORK5CYII="
-		}
-	]
+  "id": "37317c16-3fd6-11ed-b878-0242ac120002",
+  "partyId": "38a536ae-79e1-440e-b0c1-34ad1acbe411",
+  "oepInstance": "internal",
+  "externalReferences": [
+    {
+      "key": "common-key",
+      "value": "unique-value"
+    }
+  ],
+  "created": "2022-09-29T11:08:23.766+02:00",
+  "attachments": [
+    {
+      "fileName": "test_image.jpg",
+      "mimeType": "image/jpeg",
+      "base64Data": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAeSURBVDhPY1Da6EMSYiBJNVDxqAZiQmw0lAZHKAEAaskfEED3lr0AAAAASUVORK5CYII="
+    }
+  ]
 }
