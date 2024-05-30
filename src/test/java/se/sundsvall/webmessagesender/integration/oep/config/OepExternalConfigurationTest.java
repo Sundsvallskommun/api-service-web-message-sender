@@ -1,4 +1,4 @@
-package se.sundsvall.webmessagesender.integration.oep;
+package se.sundsvall.webmessagesender.integration.oep.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -18,29 +18,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
+import se.sundsvall.webmessagesender.Application;
+
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.soap.SOAPDecoder;
 import feign.soap.SOAPEncoder;
 import feign.soap.SOAPErrorDecoder;
-import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
-import se.sundsvall.webmessagesender.Application;
 
-@SpringBootTest(classes = { Application.class, OepIntegrationConfiguration.class })
+@SpringBootTest(classes = {Application.class, OepExternalConfiguration.class})
 @ActiveProfiles("junit")
-class OepIntegrationConfigurationTest {
+class OepExternalConfigurationTest {
 
 	@Autowired
-	private OepIntegrationConfiguration configuration;
-	
+	private OepExternalConfiguration configuration;
+
 	@Mock
-	private OepIntegrationProperties propertiesMock;
+	private OepProperties propertiesMock;
 
 	@Captor
 	private ArgumentCaptor<BasicAuthRequestInterceptor> basicAuthRequestInterceptorCaptor;
-	
+
 	@Spy
 	private FeignMultiCustomizer feignMultiCustomizerSpy;
-	
+
 	@Test
 	void testFeignMultiCustomizer() {
 
@@ -51,7 +52,7 @@ class OepIntegrationConfigurationTest {
 
 		when(propertiesMock.connectTimeout()).thenReturn(connectTimeout);
 		when(propertiesMock.readTimeout()).thenReturn(readTimeout);
-		when(propertiesMock.password()).thenReturn(password);
+		when(propertiesMock.externalPassword()).thenReturn(password);
 		when(propertiesMock.username()).thenReturn(username);
 
 		// Mock static FeignMultiCustomizer to enable spy and to verify that static method is being called
@@ -66,7 +67,7 @@ class OepIntegrationConfigurationTest {
 		// Verifications
 		verify(propertiesMock).connectTimeout();
 		verify(propertiesMock).readTimeout();
-		verify(propertiesMock).password();
+		verify(propertiesMock).externalPassword();
 		verify(propertiesMock).username();
 		verify(feignMultiCustomizerSpy).withDecoder(any(SOAPDecoder.class));
 		verify(feignMultiCustomizerSpy).withEncoder(any(SOAPEncoder.class));
@@ -78,8 +79,8 @@ class OepIntegrationConfigurationTest {
 		// Assert captors
 		assertThat(basicAuthRequestInterceptorCaptor.getValue()).hasFieldOrPropertyWithValue("headerValue", "Basic " + base64Encode((username + ":" + password)));
 	}
-	
+
 	private String base64Encode(String string) {
 		return new String(Base64.getEncoder().encode(string.getBytes()));
-	}	
+	}
 }

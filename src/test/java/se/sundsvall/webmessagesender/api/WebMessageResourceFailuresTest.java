@@ -1,25 +1,26 @@
 package se.sundsvall.webmessagesender.api;
 
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
+
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+
 import se.sundsvall.webmessagesender.Application;
 import se.sundsvall.webmessagesender.api.model.Attachment;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.service.WebMessageService;
-
-import java.util.List;
-import java.util.UUID;
-
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
@@ -37,6 +38,7 @@ class WebMessageResourceFailuresTest {
 		// Parameter values
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withMessage("Test message")
+			.withOepInstance("external")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
 			.withPartyId(null); // Missing partyId
 
@@ -62,6 +64,7 @@ class WebMessageResourceFailuresTest {
 		// Parameter values
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withMessage("Test message")
+			.withOepInstance("internal")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
 			.withPartyId("invalid"); // Invalid partyId
 
@@ -182,7 +185,7 @@ class WebMessageResourceFailuresTest {
 		// Verification
 		verifyNoInteractions(webMessageService);
 	}
-	
+
 	@Test
 	void createWebMessageAttachmentBase64DataToLarge() {
 
@@ -208,7 +211,7 @@ class WebMessageResourceFailuresTest {
 		// Verification
 		verifyNoInteractions(webMessageService);
 	}
-	
+
 	@Test
 	void createWebMessageAttachmentBase64DataNotBase64Encoded() {
 
@@ -252,8 +255,10 @@ class WebMessageResourceFailuresTest {
 			.jsonPath("$.status").isEqualTo(BAD_REQUEST.value())
 			.jsonPath("$.violations[0].field").isEqualTo("externalReferences")
 			.jsonPath("$.violations[0].message").isEqualTo("can not be empty or contain elements with empty keys or values")
-			.jsonPath("$.violations[1].field").isEqualTo("partyId")
-			.jsonPath("$.violations[1].message").isEqualTo("not a valid UUID");
+			.jsonPath("$.violations[1].field").isEqualTo("oepInstance")
+			.jsonPath("$.violations[1].message").isEqualTo("instance can only be 'internal' or 'external'")
+			.jsonPath("$.violations[2].field").isEqualTo("partyId")
+			.jsonPath("$.violations[2].message").isEqualTo("not a valid UUID");
 
 		// Verification
 		verifyNoInteractions(webMessageService);

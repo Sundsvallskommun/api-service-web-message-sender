@@ -28,6 +28,7 @@ public final class WebMessageMapper {
 		}
 		return WebMessageEntity.create()
 			.withAttachments(toAttachmentEntities(createWebMessageRequest.getAttachments()))
+			.withOepInstance(createWebMessageRequest.getOepInstance())
 			.withExternalReferences(toExternalReferenceEntities(createWebMessageRequest.getExternalReferences()))
 			.withMessage(createWebMessageRequest.getMessage())
 			.withOepMessageId(oepMessageId)
@@ -40,6 +41,7 @@ public final class WebMessageMapper {
 		}
 		return WebMessage.create()
 			.withAttachments(toAttachments(webMessageEntity.getAttachments()))
+			.withOepInstance(webMessageEntity.getOepInstance())
 			.withCreated(webMessageEntity.getCreated())
 			.withExternalReferences(toExternalReferences(webMessageEntity.getExternalReferences()))
 			.withId(webMessageEntity.getId())

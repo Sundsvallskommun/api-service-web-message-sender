@@ -1,10 +1,12 @@
 integration:
   oep:
     connectTimeout: 1
-    password: oep.password
     readTimeout: 1
-    url: http://localhost:${wiremock.server.port}/oepMock
+    external-url: http://localhost:${wiremock.server.port}/external-oepMock
+    internal-url: http://localhost:${wiremock.server.port}/internal-oepMock
     username: oep.username
+    external-password: oep.client.external.password
+    internal-password: oep.client.internal.password
 spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver

@@ -1,4 +1,4 @@
-package se.sundsvall.webmessagesender.integration.oep;
+package se.sundsvall.webmessagesender.integration.oep.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,15 +11,16 @@ import se.sundsvall.webmessagesender.Application;
 
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("junit")
-class OepIntegrationPropertiesTest {
+class OepPropertiesTest {
 
 	@Autowired
-	private OepIntegrationProperties properties;
-	
+	private OepProperties properties;
+
 	@Test
 	void testProperties() {
 		assertThat(properties.connectTimeout()).isEqualTo(10);
-		assertThat(properties.password()).isEqualTo("oep.client.password");
+		assertThat(properties.externalPassword()).isEqualTo("oep.client.external.password");
+		assertThat(properties.internalPassword()).isEqualTo("oep.client.internal.password");
 		assertThat(properties.readTimeout()).isEqualTo(20);
 		assertThat(properties.username()).isEqualTo("oep.client.username");
 	}

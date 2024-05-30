@@ -1,11 +1,6 @@
-package se.sundsvall.webmessagesender.integration.oep;
-import feign.jaxb.JAXBContextFactory;
-import feign.soap.SOAPDecoder;
-import jakarta.xml.soap.SOAPConstants;
+package se.sundsvall.webmessagesender.integration.oep.config;
 
-import feign.auth.BasicAuthRequestInterceptor;
-import feign.soap.SOAPEncoder;
-import feign.soap.SOAPErrorDecoder;
+import jakarta.xml.soap.SOAPConstants;
 
 import org.springframework.cloud.openfeign.FeignBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +9,16 @@ import org.springframework.context.annotation.Import;
 import se.sundsvall.dept44.configuration.feign.FeignConfiguration;
 import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 
+import feign.auth.BasicAuthRequestInterceptor;
+import feign.jaxb.JAXBContextFactory;
+import feign.soap.SOAPDecoder;
+import feign.soap.SOAPEncoder;
+import feign.soap.SOAPErrorDecoder;
+
 @Import(FeignConfiguration.class)
-public class OepIntegrationConfiguration {
+public class OepExternalConfiguration {
+
+	public static final String OEP_EXTERNAL_CLIENT = "oep-external";
 
 	private static final JAXBContextFactory JAXB_FACTORY = new JAXBContextFactory.Builder().build();
 
@@ -26,12 +29,12 @@ public class OepIntegrationConfiguration {
 		.withWriteXmlDeclaration(true);
 
 	@Bean
-	FeignBuilderCustomizer feignBuilderCustomizer(OepIntegrationProperties properties) {
+	FeignBuilderCustomizer feignBuilderCustomizer(OepProperties properties) {
 		return FeignMultiCustomizer.create()
 			.withDecoder(new SOAPDecoder(JAXB_FACTORY))
 			.withEncoder(SOAP_ENCODER_BUILDER.build())
 			.withErrorDecoder(new SOAPErrorDecoder())
-			.withRequestInterceptor(new BasicAuthRequestInterceptor(properties.username(), properties.password()))
+			.withRequestInterceptor(new BasicAuthRequestInterceptor(properties.username(), properties.externalPassword()))
 			.withRequestTimeoutsInSeconds(properties.connectTimeout(), properties.readTimeout())
 			.composeCustomizersToOne();
 	}

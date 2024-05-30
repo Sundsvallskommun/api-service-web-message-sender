@@ -20,6 +20,7 @@
         oep_message_id integer,
         created datetime(6),
         id varchar(255) not null,
+        oep_instance varchar(255),
         party_id varchar(255),
         message longtext,
         primary key (id)

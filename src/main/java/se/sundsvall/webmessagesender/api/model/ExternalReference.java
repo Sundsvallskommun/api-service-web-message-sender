@@ -44,7 +44,7 @@ public class ExternalReference {
 	}
 
 	@Override
-	public int hashCode() { return Objects.hash(key, value); }
+	public int hashCode() {return Objects.hash(key, value);}
 
 	@Override
 	public boolean equals(Object obj) {
