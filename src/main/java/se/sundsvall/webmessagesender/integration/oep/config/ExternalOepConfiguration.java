@@ -4,9 +4,7 @@ import jakarta.xml.soap.SOAPConstants;
 
 import org.springframework.cloud.openfeign.FeignBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 
-import se.sundsvall.dept44.configuration.feign.FeignConfiguration;
 import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 
 import feign.auth.BasicAuthRequestInterceptor;
@@ -15,31 +13,18 @@ import feign.soap.SOAPDecoder;
 import feign.soap.SOAPEncoder;
 import feign.soap.SOAPErrorDecoder;
 
-@Import(FeignConfiguration.class)
-public class OepConfiguration {
+public class ExternalOepConfiguration {
 
-	public static final String OEP_INTERNAL_CLIENT = "oep-internal";
-	public static final String OEP_EXTERNAL_CLIENT = "oep-external";
 
-	private static final JAXBContextFactory JAXB_FACTORY = new JAXBContextFactory.Builder().build();
+	static final JAXBContextFactory JAXB_FACTORY = new JAXBContextFactory.Builder().build();
 
-	private static final SOAPEncoder.Builder SOAP_ENCODER_BUILDER = new SOAPEncoder.Builder()
+	static final SOAPEncoder.Builder SOAP_ENCODER_BUILDER = new SOAPEncoder.Builder()
 		.withFormattedOutput(false)
 		.withJAXBContextFactory(JAXB_FACTORY)
 		.withSOAPProtocol(SOAPConstants.SOAP_1_1_PROTOCOL)
 		.withWriteXmlDeclaration(true);
 
-	@Bean
-	FeignBuilderCustomizer internalFeignBuilderCustomizer(final OepProperties properties) {
-		return FeignMultiCustomizer.create()
-			.withDecoder(new SOAPDecoder(JAXB_FACTORY))
-			.withEncoder(SOAP_ENCODER_BUILDER.build())
-			.withErrorDecoder(new SOAPErrorDecoder())
-			.withRequestInterceptor(new BasicAuthRequestInterceptor(properties.username(), properties.internalPassword()))
-			.withRequestTimeoutsInSeconds(properties.connectTimeout(), properties.readTimeout())
-			.composeCustomizersToOne();
-	}
-
+	public static final String OEP_EXTERNAL_CLIENT = "oep-external";
 	@Bean
 	FeignBuilderCustomizer externalFeignBuilderCustomizer(final OepProperties properties) {
 		return FeignMultiCustomizer.create()
@@ -50,4 +35,5 @@ public class OepConfiguration {
 			.withRequestTimeoutsInSeconds(properties.connectTimeout(), properties.readTimeout())
 			.composeCustomizersToOne();
 	}
+
 }

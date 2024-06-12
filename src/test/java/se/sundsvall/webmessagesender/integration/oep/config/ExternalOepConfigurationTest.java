@@ -1,6 +1,7 @@
 package se.sundsvall.webmessagesender.integration.oep.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,10 +29,10 @@ import feign.soap.SOAPErrorDecoder;
 
 @SpringBootTest(classes = {Application.class})
 @ActiveProfiles("junit")
-class OepConfigurationTest {
+class ExternalOepConfigurationTest {
 
 	@InjectMocks
-	private OepConfiguration configuration;
+	private ExternalOepConfiguration configuration;
 
 	@Mock
 	private OepProperties propertiesMock;
@@ -56,7 +57,7 @@ class OepConfigurationTest {
 		when(propertiesMock.username()).thenReturn(username);
 
 		// Mock static FeignMultiCustomizer to enable spy and to verify that static method is being called
-		try (MockedStatic<FeignMultiCustomizer> feignMultiCustomizerMock = Mockito.mockStatic(FeignMultiCustomizer.class)) {
+		try (final MockedStatic<FeignMultiCustomizer> feignMultiCustomizerMock = Mockito.mockStatic(FeignMultiCustomizer.class)) {
 			feignMultiCustomizerMock.when(FeignMultiCustomizer::create).thenReturn(feignMultiCustomizerSpy);
 
 			configuration.externalFeignBuilderCustomizer(propertiesMock);
@@ -80,45 +81,8 @@ class OepConfigurationTest {
 		assertThat(basicAuthRequestInterceptorCaptor.getValue()).hasFieldOrPropertyWithValue("headerValue", "Basic " + base64Encode((username + ":" + password)));
 	}
 
-	@Test
-	void testInternalFeignMultiCustomizer() {
-
-		final var connectTimeout = 123;
-		final var readTimeout = 321;
-		final var password = "password";
-		final var username = "username";
-
-		when(propertiesMock.connectTimeout()).thenReturn(connectTimeout);
-		when(propertiesMock.readTimeout()).thenReturn(readTimeout);
-		when(propertiesMock.internalPassword()).thenReturn(password);
-		when(propertiesMock.username()).thenReturn(username);
-
-		// Mock static FeignMultiCustomizer to enable spy and to verify that static method is being called
-		try (MockedStatic<FeignMultiCustomizer> feignMultiCustomizerMock = Mockito.mockStatic(FeignMultiCustomizer.class)) {
-			feignMultiCustomizerMock.when(FeignMultiCustomizer::create).thenReturn(feignMultiCustomizerSpy);
-
-			configuration.internalFeignBuilderCustomizer(propertiesMock);
-
-			feignMultiCustomizerMock.verify(FeignMultiCustomizer::create);
-		}
-
-		// Verifications
-		verify(propertiesMock).connectTimeout();
-		verify(propertiesMock).readTimeout();
-		verify(propertiesMock).internalPassword();
-		verify(propertiesMock).username();
-		verify(feignMultiCustomizerSpy).withDecoder(any(SOAPDecoder.class));
-		verify(feignMultiCustomizerSpy).withEncoder(any(SOAPEncoder.class));
-		verify(feignMultiCustomizerSpy).withErrorDecoder(any(SOAPErrorDecoder.class));
-		verify(feignMultiCustomizerSpy).withRequestInterceptor(basicAuthRequestInterceptorCaptor.capture());
-		verify(feignMultiCustomizerSpy).withRequestTimeoutsInSeconds(connectTimeout, readTimeout);
-		verify(feignMultiCustomizerSpy).composeCustomizersToOne();
-
-		// Assert captors
-		assertThat(basicAuthRequestInterceptorCaptor.getValue()).hasFieldOrPropertyWithValue("headerValue", "Basic " + base64Encode((username + ":" + password)));
-	}
-
-	private String base64Encode(String string) {
+	private String base64Encode(final String string) {
 		return new String(Base64.getEncoder().encode(string.getBytes()));
 	}
+
 }
