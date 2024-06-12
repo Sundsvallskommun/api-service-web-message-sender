@@ -28,10 +28,10 @@ import feign.soap.SOAPErrorDecoder;
 
 @SpringBootTest(classes = {Application.class})
 @ActiveProfiles("junit")
-class OepConfigurationTest {
+class OepInternalConfigurationTest {
 
 	@InjectMocks
-	private OepConfiguration configuration;
+	private OepInternalConfiguration configuration;
 
 	@Mock
 	private OepProperties propertiesMock;
@@ -41,44 +41,6 @@ class OepConfigurationTest {
 
 	@Spy
 	private FeignMultiCustomizer feignMultiCustomizerSpy;
-
-	@Test
-	void testExternalFeignMultiCustomizer() {
-
-		final var connectTimeout = 123;
-		final var readTimeout = 321;
-		final var password = "password";
-		final var username = "username";
-
-		when(propertiesMock.connectTimeout()).thenReturn(connectTimeout);
-		when(propertiesMock.readTimeout()).thenReturn(readTimeout);
-		when(propertiesMock.externalPassword()).thenReturn(password);
-		when(propertiesMock.username()).thenReturn(username);
-
-		// Mock static FeignMultiCustomizer to enable spy and to verify that static method is being called
-		try (MockedStatic<FeignMultiCustomizer> feignMultiCustomizerMock = Mockito.mockStatic(FeignMultiCustomizer.class)) {
-			feignMultiCustomizerMock.when(FeignMultiCustomizer::create).thenReturn(feignMultiCustomizerSpy);
-
-			configuration.externalFeignBuilderCustomizer(propertiesMock);
-
-			feignMultiCustomizerMock.verify(FeignMultiCustomizer::create);
-		}
-
-		// Verifications
-		verify(propertiesMock).connectTimeout();
-		verify(propertiesMock).readTimeout();
-		verify(propertiesMock).externalPassword();
-		verify(propertiesMock).username();
-		verify(feignMultiCustomizerSpy).withDecoder(any(SOAPDecoder.class));
-		verify(feignMultiCustomizerSpy).withEncoder(any(SOAPEncoder.class));
-		verify(feignMultiCustomizerSpy).withErrorDecoder(any(SOAPErrorDecoder.class));
-		verify(feignMultiCustomizerSpy).withRequestInterceptor(basicAuthRequestInterceptorCaptor.capture());
-		verify(feignMultiCustomizerSpy).withRequestTimeoutsInSeconds(connectTimeout, readTimeout);
-		verify(feignMultiCustomizerSpy).composeCustomizersToOne();
-
-		// Assert captors
-		assertThat(basicAuthRequestInterceptorCaptor.getValue()).hasFieldOrPropertyWithValue("headerValue", "Basic " + base64Encode((username + ":" + password)));
-	}
 
 	@Test
 	void testInternalFeignMultiCustomizer() {
