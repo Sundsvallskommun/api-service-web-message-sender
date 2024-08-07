@@ -1,6 +1,8 @@
 package se.sundsvall.webmessagesender.service;
 
 import static java.lang.String.format;
+import static java.util.Optional.empty;
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
@@ -9,7 +11,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -23,13 +24,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-
-import jakarta.xml.soap.Detail;
-import jakarta.xml.soap.SOAPFault;
-import jakarta.xml.ws.soap.SOAPFaultException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +40,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.Status;
 import org.zalando.problem.ThrowableProblem;
 
+import jakarta.xml.soap.Detail;
+import jakarta.xml.soap.SOAPFault;
+import jakarta.xml.ws.soap.SOAPFaultException;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.generatedsources.oep.AddMessage;
@@ -88,37 +87,39 @@ class WebMessageServiceTest {
 	private ArgumentCaptor<WebMessageEntity> webMessageEntityCaptor;
 
 	@Test
-	void createWebMessageWithoutFlowInstanceId() {
+	void createWithoutFlowInstanceId() {
 
 		// Setup
+		final var municipalityId = "municipalityId";
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
 			.withMessage("Message")
-			.withPartyId(UUID.randomUUID().toString());
+			.withPartyId(randomUUID().toString());
 
 		// Mock
-		final var webMessageEntity = toWebMessageEntity(createWebMessageRequest, null);
+		final var webMessageEntity = toWebMessageEntity(municipalityId, createWebMessageRequest, null);
 		when(webMessageRepository.save(any())).thenReturn(webMessageEntity);
 
 		// Call
-		final var result = webMessageService.createWebMessage(createWebMessageRequest);
+		final var result = webMessageService.create(municipalityId, createWebMessageRequest);
+
+		assertThat(result).isNotNull();
 
 		// Verification
 		verify(webMessageRepository).save(webMessageEntity);
 		verifyNoMoreInteractions(webMessageRepository);
-
-		assertThat(result).isNotNull();
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"flowInstanceId", "flowinstanceid", "FLOWINSTANCEID"})
-	void createWebMessageWithFlowInstanceId(String key) {
+	@ValueSource(strings = { "flowInstanceId", "flowinstanceid", "FLOWINSTANCEID" })
+	void createWithFlowInstanceId(String key) {
 
 		// Setup
 		final var value = "123456";
-		final var partyId = UUID.randomUUID().toString();
+		final var partyId = randomUUID().toString();
 		final var message = "Message";
 		final var oepMessageId = Integer.MAX_VALUE;
+		final var municipalityId = "municipalityId";
 
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withOepInstance("internal")
@@ -126,8 +127,7 @@ class WebMessageServiceTest {
 			.withMessage(message)
 			.withPartyId(partyId);
 
-
-		final var webMessageEntity = toWebMessageEntity(createWebMessageRequest, oepMessageId);
+		final var webMessageEntity = toWebMessageEntity(municipalityId, createWebMessageRequest, oepMessageId);
 
 		// Mock
 		when(oepIntegration.addMessage(eq("internal"), any(AddMessage.class))).thenReturn(addMessageResponse);
@@ -135,7 +135,7 @@ class WebMessageServiceTest {
 		when(webMessageRepository.save(any())).thenReturn(webMessageEntity);
 
 		// Call
-		final var result = webMessageService.createWebMessage(createWebMessageRequest);
+		final var result = webMessageService.create(municipalityId, createWebMessageRequest);
 
 		// Verification
 		verify(oepIntegration).addMessage(eq("internal"), addMessageCaptor.capture());
@@ -156,6 +156,7 @@ class WebMessageServiceTest {
 		assertThat(webMessageEntityCaptor.getValue().getMessage()).isEqualTo(message);
 		assertThat(webMessageEntityCaptor.getValue().getOepMessageId()).isEqualTo(oepMessageId);
 		assertThat(webMessageEntityCaptor.getValue().getPartyId()).isEqualTo(partyId);
+		assertThat(webMessageEntityCaptor.getValue().getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(webMessageEntityCaptor.getValue().getExternalReferences())
 			.hasSize(1)
 			.extracting(ExternalReferenceEntity::getId, ExternalReferenceEntity::getKey, ExternalReferenceEntity::getValue)
@@ -163,13 +164,14 @@ class WebMessageServiceTest {
 	}
 
 	@Test
-	void createWebMessageThrowsSOAPFaultException() {
+	void createThrowsSOAPFaultException() {
 
 		// Setup
+		final var municipalityId = "municipalityId";
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("123456")))
 			.withMessage("Message")
-			.withPartyId(UUID.randomUUID().toString());
+			.withPartyId(randomUUID().toString());
 
 		// Mock throw from OEP integration
 		when(oepIntegration.addMessage(any(), any())).thenThrow(soapFaultException);
@@ -179,7 +181,7 @@ class WebMessageServiceTest {
 		when(detail.getDetailEntries()).thenReturn(Collections.emptyIterator());
 
 		// Call
-		final var problem = assertThrows(ThrowableProblem.class, () -> webMessageService.createWebMessage(createWebMessageRequest));
+		final var problem = assertThrows(ThrowableProblem.class, () -> webMessageService.create(municipalityId, createWebMessageRequest));
 
 		// Verification
 		assertThat(problem).isNotNull();
@@ -192,20 +194,21 @@ class WebMessageServiceTest {
 	}
 
 	@Test
-	void createWebMessageThrowsDatatypeConfigurationException() {
+	void createThrowsDatatypeConfigurationException() {
 
 		// Setup
+		final var municipalityId = "municipalityId";
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("123456")))
 			.withMessage("Message")
-			.withPartyId(UUID.randomUUID().toString());
+			.withPartyId(randomUUID().toString());
 
 		// Mock throw from static method and test
 		try (MockedStatic<OepMapper> mockMapper = mockStatic(OepMapper.class)) {
 			mockMapper.when(() -> toAddMessage(any(), anyInt(), any())).thenThrow(new DatatypeConfigurationException());
 
 			// Call
-			final var problem = assertThrows(ThrowableProblem.class, () -> webMessageService.createWebMessage(createWebMessageRequest));
+			final var problem = assertThrows(ThrowableProblem.class, () -> webMessageService.create(municipalityId, createWebMessageRequest));
 
 			// Verification
 			assertThat(problem).isNotNull();
@@ -218,117 +221,128 @@ class WebMessageServiceTest {
 	}
 
 	@Test
-	void deleteWebMessageById() {
+	void deleteByMunicipalityIdAndId() {
 
 		// Setup
-		final var id = UUID.randomUUID().toString();
+		final var municipalityId = "municipalityId";
+		final var id = randomUUID().toString();
+		final var entity = WebMessageEntity.create();
 
 		// Mock
-		when(webMessageRepository.existsById(id)).thenReturn(true);
+		when(webMessageRepository.findByMunicipalityIdAndId(municipalityId, id)).thenReturn(Optional.of(entity));
 
 		// Call
-		webMessageService.deleteWebMessageById(id);
+		webMessageService.deleteByMunicipalityIdAndId(municipalityId, id);
 
 		// Verification
-		verify(webMessageRepository).existsById(id);
-		verify(webMessageRepository).deleteById(id);
+		verify(webMessageRepository).findByMunicipalityIdAndId(municipalityId, id);
+		verify(webMessageRepository).delete(entity);
 	}
 
 	@Test
-	void deleteWebMessageByIdNotFound() {
+	void deleteByMunicipalityIdAndIdNotFound() {
 
 		// Setup
-		final var id = UUID.randomUUID().toString();
+		final var municipalityId = "municipalityId";
+		final var id = randomUUID().toString();
 
 		// Mock
-		when(webMessageRepository.existsById(id)).thenReturn(false);
+		when(webMessageRepository.findByMunicipalityIdAndId(municipalityId, id)).thenReturn(empty());
 
 		// Call
-		final var problem = assertThrows(ThrowableProblem.class, () -> webMessageService.deleteWebMessageById(id));
+		final var problem = assertThrows(ThrowableProblem.class, () -> webMessageService.deleteByMunicipalityIdAndId(municipalityId, id));
 
 		// Verification
 		assertThat(problem).isNotNull();
 		assertThat(problem.getTitle()).isEqualTo(Status.NOT_FOUND.getReasonPhrase());
 		assertThat(problem.getStatus()).isEqualTo(Status.NOT_FOUND);
 		assertThat(problem.getDetail()).isEqualTo(format(ERROR_WEB_MESSAGE_NOT_FOUND, id));
-		verify(webMessageRepository).existsById(id);
-		verify(webMessageRepository, never()).deleteById(any());
+
+		verify(webMessageRepository).findByMunicipalityIdAndId(municipalityId, id);
+		verifyNoMoreInteractions(webMessageRepository);
 	}
 
 	@Test
-	void getWebMessageById() {
+	void getByMunicipalityIdAndId() {
 
 		// Setup
-		final var id = UUID.randomUUID().toString();
+		final var municipalityId = "municipalityId";
+		final var id = randomUUID().toString();
 
 		// Mock
-		when(webMessageRepository.findById(id)).thenReturn(Optional.of(WebMessageEntity.create().withId(id)));
+		when(webMessageRepository.findByMunicipalityIdAndId(municipalityId, id)).thenReturn(Optional.of(WebMessageEntity.create().withId(id)));
 
 		// Call
-		final var result = webMessageService.getWebMessageById(id);
+		final var result = webMessageService.getByMunicipalityIdAndId(municipalityId, id);
 
 		// Verification
 		assertThat(result).isNotNull();
 		assertThat(result.getId()).isEqualTo(id);
-		verify(webMessageRepository).findById(id);
+
+		verify(webMessageRepository).findByMunicipalityIdAndId(municipalityId, id);
 	}
 
 	@Test
-	void getWebMessageByIdNotFound() {
+	void getWebMessageByMunicipalityIdAndIdNotFound() {
 
 		// Setup
-		final var id = UUID.randomUUID().toString();
+		final var municipalityId = "municipalityId";
+		final var id = randomUUID().toString();
 
 		// Mock
-		when(webMessageRepository.findById(id)).thenReturn(Optional.empty());
+		when(webMessageRepository.findByMunicipalityIdAndId(municipalityId, id)).thenReturn(Optional.empty());
 
 		// Call
-		final var problem = assertThrows(ThrowableProblem.class, () -> webMessageService.getWebMessageById(id));
+		final var problem = assertThrows(ThrowableProblem.class, () -> webMessageService.getByMunicipalityIdAndId(municipalityId, id));
 
 		// Verification
 		assertThat(problem).isNotNull();
 		assertThat(problem.getTitle()).isEqualTo(Status.NOT_FOUND.getReasonPhrase());
 		assertThat(problem.getStatus()).isEqualTo(Status.NOT_FOUND);
 		assertThat(problem.getDetail()).isEqualTo(format(ERROR_WEB_MESSAGE_NOT_FOUND, id));
-		verify(webMessageRepository).findById(id);
+
+		verify(webMessageRepository).findByMunicipalityIdAndId(municipalityId, id);
 	}
 
 	@Test
 	void getWebMessagesByPartyId() {
 
 		// Setup
-		final var id = UUID.randomUUID().toString();
-		final var partyId = UUID.randomUUID().toString();
+		final var municipalityId = "municipalityId";
+		final var id = randomUUID().toString();
+		final var partyId = randomUUID().toString();
 
 		// Mock
-		when(webMessageRepository.findByPartyIdOrderByCreated(partyId)).thenReturn(List.of(WebMessageEntity.create().withId(id).withPartyId(partyId)));
+		when(webMessageRepository.findByMunicipalityIdAndPartyIdOrderByCreated(municipalityId, partyId)).thenReturn(List.of(WebMessageEntity.create().withId(id).withPartyId(partyId)));
 
 		// Call
-		final var result = webMessageService.getWebMessagesByPartyId(partyId);
+		final var result = webMessageService.getByMunicipalityIdAndPartyId(municipalityId, partyId);
 
 		// Verification
 		assertThat(result).isNotNull().hasSize(1);
 		assertThat(result.get(0).getId()).isEqualTo(id);
 		assertThat(result.get(0).getPartyId()).isEqualTo(partyId);
-		verify(webMessageRepository).findByPartyIdOrderByCreated(partyId);
+
+		verify(webMessageRepository).findByMunicipalityIdAndPartyIdOrderByCreated(municipalityId, partyId);
 	}
 
 	@Test
-	void getWebMessagesByExternalReference() {
+	void getWebMessagesByMunicipalityIdAndExternalReference() {
 
 		// Setup
-		final var id = UUID.randomUUID().toString();
-		final var partyId = UUID.randomUUID().toString();
+		final var municipalityId = "municipalityId";
+		final var id = randomUUID().toString();
+		final var partyId = randomUUID().toString();
 		final var key = "key";
 		final var value = "value";
 
 		// Mock
-		when(webMessageRepository.findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated(key, value))
+		when(webMessageRepository.findByMunicipalityIdAndExternalReferencesKeyAndExternalReferencesValueOrderByCreated(municipalityId, key, value))
 			.thenReturn(List.of(WebMessageEntity.create().withId(id).withPartyId(partyId)
 				.withExternalReferences(List.of(ExternalReferenceEntity.create().withKey(key).withValue(value)))));
 
 		// Call
-		final var result = webMessageService.getWebMessagesByExternalReference(key, value);
+		final var result = webMessageService.getByMunicipalityIdAndExternalReference(municipalityId, key, value);
 
 		// Verification
 		assertThat(result).isNotNull().hasSize(1);
@@ -336,6 +350,7 @@ class WebMessageServiceTest {
 		assertThat(result.get(0).getPartyId()).isEqualTo(partyId);
 		assertThat(result.get(0).getExternalReferences()).extracting(ExternalReference::getKey).containsExactly(key);
 		assertThat(result.get(0).getExternalReferences()).extracting(ExternalReference::getValue).containsExactly(value);
-		verify(webMessageRepository).findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated(key, value);
+
+		verify(webMessageRepository).findByMunicipalityIdAndExternalReferencesKeyAndExternalReferencesValueOrderByCreated(municipalityId, key, value);
 	}
 }

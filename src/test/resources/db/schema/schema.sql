@@ -20,6 +20,7 @@
         oep_message_id integer,
         created datetime(6),
         id varchar(255) not null,
+        municipality_id varchar(255),
         oep_instance varchar(255),
         party_id varchar(255),
         message longtext,
@@ -34,6 +35,9 @@
 
     alter table if exists external_reference 
        add constraint unique_external_reference unique (ref_key, ref_value, parent_id);
+
+    create index web_message_municipality_id_index 
+       on web_message (municipality_id);
 
     create index web_message_party_id_index 
        on web_message (party_id);

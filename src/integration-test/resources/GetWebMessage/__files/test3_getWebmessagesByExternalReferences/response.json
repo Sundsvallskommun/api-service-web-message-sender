@@ -1,15 +1,16 @@
 [
-  {
-    "attachments": [],
-    "created": "2021-11-21T10:05:48.198+01:00",
-    "externalReferences": [
-      {
-        "key": "key1",
-        "value": "value1"
-      }
-    ],
-    "id": "1e098e28-d9ba-459c-94c7-5508be826c08",
-    "oepInstance": "external",
-    "partyId": "fbfbd90c-4c47-11ec-81d3-0242ac130003"
-  }
+	{
+		"id": "1e098e28-d9ba-459c-94c7-5508be826c08",
+		"municipalityId": "2281",
+		"oepInstance": "external",
+		"partyId": "fbfbd90c-4c47-11ec-81d3-0242ac130003",
+		"attachments": [],
+		"created": "2021-11-21T10:05:48.198+01:00",
+		"externalReferences": [
+			{
+				"key": "key1",
+				"value": "value1"
+			}
+		]
+	}
 ]

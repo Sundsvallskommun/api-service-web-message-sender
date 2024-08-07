@@ -20,10 +20,11 @@ import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
 
 @WireMockAppTestSuite(
 	files = "classpath:/CreateWebMessage/",
-	classes = Application.class
-)
+	classes = Application.class)
 class CreateWebMessageIT extends AbstractAppTest {
 
+	private static final String MUNICIPALITY_ID = "2281";
+	private static final String PATH = "/%s/webmessages".formatted(MUNICIPALITY_ID);
 	private static final String REQUEST_FILE = "request.json";
 	private static final String RESPONSE_FILE = "response.json";
 
@@ -33,14 +34,14 @@ class CreateWebMessageIT extends AbstractAppTest {
 	@Test
 	void test1_createInternalMessageSuccessful() {
 		setupCall()
-			.withServicePath("/webmessages")
+			.withServicePath(PATH)
 			.withHttpMethod(POST)
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(CREATED)
-			.withExpectedResponseHeader(LOCATION, List.of("^/webmessages/(.*)$"))
+			.withExpectedResponseHeader(LOCATION, List.of("^/2281/webmessages(.*)$"))
 			.sendRequestAndVerifyResponse();
 
-		var webMessages = repository.findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated("flowInstanceId", "356434");
+		final var webMessages = repository.findByMunicipalityIdAndExternalReferencesKeyAndExternalReferencesValueOrderByCreated(MUNICIPALITY_ID, "flowInstanceId", "356434");
 		assertThat(webMessages).hasSize(1);
 		assertThat(webMessages.getFirst()).satisfies(webMessage -> {
 			assertThat(webMessage.getOepInstance()).isEqualTo("internal");
@@ -52,7 +53,7 @@ class CreateWebMessageIT extends AbstractAppTest {
 	@Test
 	void test2_timeoutFromOep() {
 		setupCall()
-			.withServicePath("/webmessages")
+			.withServicePath(PATH)
 			.withHttpMethod(POST)
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(INTERNAL_SERVER_ERROR)
@@ -63,7 +64,7 @@ class CreateWebMessageIT extends AbstractAppTest {
 	@Test
 	void test3_instanceIdNotFound() {
 		setupCall()
-			.withServicePath("/webmessages")
+			.withServicePath(PATH)
 			.withHttpMethod(POST)
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(NOT_FOUND)
@@ -74,28 +75,28 @@ class CreateWebMessageIT extends AbstractAppTest {
 	@Test
 	void test4_createWithAttachmentSuccessful() {
 		setupCall()
-			.withServicePath("/webmessages")
+			.withServicePath(PATH)
 			.withHttpMethod(POST)
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(CREATED)
-			.withExpectedResponseHeader(LOCATION, List.of("^/webmessages/(.*)$"))
+			.withExpectedResponseHeader(LOCATION, List.of("^/2281/webmessages/(.*)$"))
 			.sendRequestAndVerifyResponse();
 
-		assertThat(repository.findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated("flowInstanceId", "2154"))
+		assertThat(repository.findByMunicipalityIdAndExternalReferencesKeyAndExternalReferencesValueOrderByCreated(MUNICIPALITY_ID, "flowInstanceId", "2154"))
 			.extracting(WebMessageEntity::getAttachments).hasSize(1);
 	}
 
 	@Test
 	void test5_createExternalMessageSuccessful() {
 		setupCall()
-			.withServicePath("/webmessages")
+			.withServicePath(PATH)
 			.withHttpMethod(POST)
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(CREATED)
-			.withExpectedResponseHeader(LOCATION, List.of("^/webmessages/(.*)$"))
+			.withExpectedResponseHeader(LOCATION, List.of("^/2281/webmessages/(.*)$"))
 			.sendRequestAndVerifyResponse();
 
-		var webMessages = repository.findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated("flowInstanceId", "356435");
+		final var webMessages = repository.findByMunicipalityIdAndExternalReferencesKeyAndExternalReferencesValueOrderByCreated(MUNICIPALITY_ID, "flowInstanceId", "356435");
 		assertThat(webMessages).hasSize(1);
 	}
 }

@@ -43,6 +43,7 @@ class WebMessageTest {
 		final var id = UUID.randomUUID().toString();
 		final var externalReferences = List.of(ExternalReference.create());
 		final var message = "message";
+		final var municipalityId = "municipalityId";
 		final var partyId = UUID.randomUUID().toString();
 		final var attachments = List.of(Attachment.create());
 		final var oepInstance = "internal";
@@ -53,6 +54,7 @@ class WebMessageTest {
 			.withId(id)
 			.withExternalReferences(externalReferences)
 			.withMessage(message)
+			.withMunicipalityId(municipalityId)
 			.withPartyId(partyId)
 			.withAttachments(attachments);
 
@@ -62,6 +64,7 @@ class WebMessageTest {
 		assertThat(webMessage.getOepInstance()).isEqualTo(oepInstance);
 		assertThat(webMessage.getExternalReferences()).isEqualTo(externalReferences);
 		assertThat(webMessage.getMessage()).isEqualTo(message);
+		assertThat(webMessage.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(webMessage.getPartyId()).isEqualTo(partyId);
 		assertThat(webMessage.getAttachments()).isEqualTo(attachments);
 	}

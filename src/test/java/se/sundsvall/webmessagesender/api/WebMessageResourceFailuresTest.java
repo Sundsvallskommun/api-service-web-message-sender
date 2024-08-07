@@ -1,5 +1,6 @@
 package se.sundsvall.webmessagesender.api;
 
+import static java.util.UUID.randomUUID;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -7,6 +8,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -36,13 +38,15 @@ class WebMessageResourceFailuresTest {
 	void createWebMessageMissingPartyId() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withMessage("Test message")
 			.withOepInstance("external")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
 			.withPartyId(null); // Missing partyId
 
-		webTestClient.post().uri("/webmessages")
+		webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -62,13 +66,15 @@ class WebMessageResourceFailuresTest {
 	void createWebMessageInvalidPartyId() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withMessage("Test message")
 			.withOepInstance("internal")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
 			.withPartyId("invalid"); // Invalid partyId
 
-		webTestClient.post().uri("/webmessages")
+		webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -85,15 +91,45 @@ class WebMessageResourceFailuresTest {
 	}
 
 	@Test
+	void createWebMessageInvalidMunicipalityIdId() {
+
+		// Parameter values
+		final var municipalityId = "invalid";
+		final var createWebMessageRequest = CreateWebMessageRequest.create()
+			.withMessage("Test message")
+			.withOepInstance("internal")
+			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
+			.withPartyId(randomUUID().toString());
+
+		webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
+			.contentType(APPLICATION_JSON)
+			.bodyValue(createWebMessageRequest)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody()
+			.jsonPath("$.title").isEqualTo("Constraint Violation")
+			.jsonPath("$.status").isEqualTo(BAD_REQUEST.value())
+			.jsonPath("$.violations[0].field").isEqualTo("createWebMessage.municipalityId")
+			.jsonPath("$.violations[0].message").isEqualTo("not a valid municipality ID");
+
+		// Verification
+		verifyNoInteractions(webMessageService);
+	}
+
+	@Test
 	void createWebMessageMissingExternalReferences() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withMessage("Test message")
 			.withExternalReferences(null) // Missing externalReferences
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages")
+		webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -113,12 +149,14 @@ class WebMessageResourceFailuresTest {
 	void createWebMessageInvalidExternalReferences() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withMessage("Test message")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue(" "))) // Invalid externalReferences
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages")
+		webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -138,13 +176,15 @@ class WebMessageResourceFailuresTest {
 	void createWebMessageAttachmentMissingFileName() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withMessage("Test message")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
 			.withAttachments(List.of(Attachment.create().withBase64Data("data")))
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages")
+		webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -164,13 +204,15 @@ class WebMessageResourceFailuresTest {
 	void createWebMessageAttachmentBase64DataMissing() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withMessage("Test message")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
 			.withAttachments(List.of(Attachment.create().withFileName("fileName")))
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages")
+		webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -190,13 +232,15 @@ class WebMessageResourceFailuresTest {
 	void createWebMessageAttachmentBase64DataToLarge() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withMessage("Test message")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
 			.withAttachments(List.of(Attachment.create().withFileName("fileName").withBase64Data("to_large_base64_data")))
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages")
+		webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -216,13 +260,15 @@ class WebMessageResourceFailuresTest {
 	void createWebMessageAttachmentBase64DataNotBase64Encoded() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var createWebMessageRequest = CreateWebMessageRequest.create()
 			.withMessage("Test message")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
 			.withAttachments(List.of(Attachment.create().withFileName("fileName").withBase64Data("not base64 åäö")))
 			.withPartyId(UUID.randomUUID().toString());
 
-		webTestClient.post().uri("/webmessages")
+		webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -242,9 +288,11 @@ class WebMessageResourceFailuresTest {
 	void createWebMessageEmptyJsonBody() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var createWebMessageRequest = "{}";
 
-		webTestClient.post().uri("/webmessages")
+		webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(createWebMessageRequest)
 			.exchange()
@@ -268,9 +316,11 @@ class WebMessageResourceFailuresTest {
 	void getWebMessageByIdInvalidId() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var id = "invalid";
 
-		webTestClient.get().uri("/webmessages/{id}", id)
+		webTestClient.get()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages/{id}").build(Map.of("municipalityId", municipalityId, "id", id)))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -288,9 +338,11 @@ class WebMessageResourceFailuresTest {
 	void getWebMessagesByPartyIdInvalidPartyId() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var partyId = "invalid";
 
-		webTestClient.get().uri("/webmessages/recipients/{partyId}", partyId)
+		webTestClient.get()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages/recipients/{partyId}").build(Map.of("municipalityId", municipalityId, "partyId", partyId)))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -308,10 +360,12 @@ class WebMessageResourceFailuresTest {
 	void getWebMessagesByExternalReferenceInvalidKey() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var key = "x";
 		final var value = "value";
 
-		webTestClient.get().uri("/webmessages/external-references/{key}/{value}", key, value)
+		webTestClient.get()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages/external-references/{key}/{value}").build(Map.of("municipalityId", municipalityId, "key", key, "value", value)))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -329,10 +383,12 @@ class WebMessageResourceFailuresTest {
 	void getWebMessagesByExternalReferenceInvalidValue() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var key = "flowInstanceId";
 		final var value = "x";
 
-		webTestClient.get().uri("/webmessages/external-references/{key}/{value}", key, value)
+		webTestClient.get()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages/external-references/{key}/{value}").build(Map.of("municipalityId", municipalityId, "key", key, "value", value)))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -350,9 +406,11 @@ class WebMessageResourceFailuresTest {
 	void deleteWebMessageByIdInvalidId() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var id = "Not valid";
 
-		webTestClient.delete().uri("/webmessages/{id}", id)
+		webTestClient.delete()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages/{id}").build(Map.of("municipalityId", municipalityId, "id", id)))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -370,16 +428,18 @@ class WebMessageResourceFailuresTest {
 	void deleteWebMessageByIdEmptyId() {
 
 		// Parameter values
+		final var municipalityId = "2281";
 		final var id = "";
 
-		webTestClient.delete().uri("/webmessages/{id}", id)
+		webTestClient.delete()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages/{id}").build(Map.of("municipalityId", municipalityId, "id", id)))
 			.exchange()
 			.expectStatus().isEqualTo(NOT_FOUND)
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
 			.expectBody()
 			.jsonPath("$.title").isEqualTo(NOT_FOUND.getReasonPhrase())
 			.jsonPath("$.status").isEqualTo(NOT_FOUND.value())
-			.jsonPath("$.detail").isEqualTo("No endpoint DELETE /webmessages/.");
+			.jsonPath("$.detail").isEqualTo("No endpoint DELETE /2281/webmessages/.");
 
 		// Verification
 		verifyNoInteractions(webMessageService);

@@ -1,6 +1,7 @@
 package se.sundsvall.webmessagesender.integration.db;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,9 @@ import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
 @CircuitBreaker(name = "webMessageRepository")
 public interface WebMessageRepository extends CrudRepository<WebMessageEntity, String> {
 
-	List<WebMessageEntity> findByPartyIdOrderByCreated(String partyId);
+	List<WebMessageEntity> findByMunicipalityIdAndPartyIdOrderByCreated(String municipalityId, String partyId);
 
-	List<WebMessageEntity> findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated(String key, String value);
+	Optional<WebMessageEntity> findByMunicipalityIdAndId(String municipalityId, String id);
+
+	List<WebMessageEntity> findByMunicipalityIdAndExternalReferencesKeyAndExternalReferencesValueOrderByCreated(String municipalityId, String key, String value);
 }
