@@ -11,7 +11,7 @@
     </parent>
     <groupId>se.sundsvall</groupId>
     <artifactId>api-service-web-message-sender</artifactId>
-    <version>2.0</version>
+    <version>3.0</version>
     <name>api-service-web-message-sender</name>
     <description>Service for sending web messages to Open-E platform</description>
     <properties>

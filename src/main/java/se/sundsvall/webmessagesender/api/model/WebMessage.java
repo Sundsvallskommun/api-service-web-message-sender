@@ -17,6 +17,9 @@ public class WebMessage {
 	@Schema(description = "Web Message ID", example = "f0882f1d-06bc-47fd-b017-1d8307f5ce95")
 	private String id;
 
+	@Schema(description = "Municipality ID", example = "2281", accessMode = READ_ONLY)
+	private String municipalityId;
+
 	@Schema(description = "Party ID (e.g. a personId or an organizationId)", example = "81471222-5798-11e9-ae24-57fa13b361e1")
 	private String partyId;
 
@@ -50,6 +53,19 @@ public class WebMessage {
 
 	public WebMessage withId(String id) {
 		this.id = id;
+		return this;
+	}
+
+	public String getMunicipalityId() {
+		return municipalityId;
+	}
+
+	public void setMunicipalityId(String municipalityId) {
+		this.municipalityId = municipalityId;
+	}
+
+	public WebMessage withMunicipalityId(String municipalityId) {
+		this.municipalityId = municipalityId;
 		return this;
 	}
 
@@ -132,28 +148,23 @@ public class WebMessage {
 	}
 
 	@Override
-	public String toString() {
-		return "WebMessage{" +
-			"id='" + id + '\'' +
-			", partyId='" + partyId + '\'' +
-			", message='" + message + '\'' +
-			", oepInstance='" + oepInstance + '\'' +
-			", externalReferences=" + externalReferences +
-			", created=" + created +
-			", attachments=" + attachments +
-			'}';
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		final WebMessage that = (WebMessage) o;
-		return Objects.equals(id, that.id) && Objects.equals(partyId, that.partyId) && Objects.equals(message, that.message) && Objects.equals(oepInstance, that.oepInstance) && Objects.equals(externalReferences, that.externalReferences) && Objects.equals(created, that.created) && Objects.equals(attachments, that.attachments);
-	}
-
-	@Override
 	public int hashCode() {
-		return Objects.hash(id, partyId, message, oepInstance, externalReferences, created, attachments);
+		return Objects.hash(attachments, created, externalReferences, id, message, municipalityId, oepInstance, partyId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) { return true; }
+		if (!(obj instanceof final WebMessage other)) { return false; }
+		return Objects.equals(attachments, other.attachments) && Objects.equals(created, other.created) && Objects.equals(externalReferences, other.externalReferences) && Objects.equals(id, other.id) && Objects.equals(message, other.message) && Objects
+			.equals(municipalityId, other.municipalityId) && Objects.equals(oepInstance, other.oepInstance) && Objects.equals(partyId, other.partyId);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("WebMessage [id=").append(id).append(", municipalityId=").append(municipalityId).append(", partyId=").append(partyId).append(", message=").append(message).append(", oepInstance=").append(oepInstance).append(", externalReferences=")
+			.append(externalReferences).append(", created=").append(created).append(", attachments=").append(attachments).append("]");
+		return builder.toString();
 	}
 }

@@ -22,7 +22,7 @@ public final class WebMessageMapper {
 
 	private WebMessageMapper() {}
 
-	public static WebMessageEntity toWebMessageEntity(final CreateWebMessageRequest createWebMessageRequest, final Integer oepMessageId) {
+	public static WebMessageEntity toWebMessageEntity(final String municipalityId, final CreateWebMessageRequest createWebMessageRequest, final Integer oepMessageId) {
 		if (isNull(createWebMessageRequest)) {
 			return null;
 		}
@@ -31,6 +31,7 @@ public final class WebMessageMapper {
 			.withOepInstance(createWebMessageRequest.getOepInstance())
 			.withExternalReferences(toExternalReferenceEntities(createWebMessageRequest.getExternalReferences()))
 			.withMessage(createWebMessageRequest.getMessage())
+			.withMunicipalityId(municipalityId)
 			.withOepMessageId(oepMessageId)
 			.withPartyId(createWebMessageRequest.getPartyId());
 	}
@@ -46,6 +47,7 @@ public final class WebMessageMapper {
 			.withExternalReferences(toExternalReferences(webMessageEntity.getExternalReferences()))
 			.withId(webMessageEntity.getId())
 			.withMessage(webMessageEntity.getMessage())
+			.withMunicipalityId(webMessageEntity.getMunicipalityId())
 			.withPartyId(webMessageEntity.getPartyId());
 	}
 

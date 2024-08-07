@@ -1,7 +1,6 @@
 package se.sundsvall.webmessagesender.service;
 
 import static java.lang.String.format;
-import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.webmessagesender.integration.oep.mapper.OepSoapFaultMapper.convertToThrowableProblem;
 import static se.sundsvall.webmessagesender.service.ServiceConstants.ERROR_WEB_MESSAGE_NOT_FOUND;
@@ -16,29 +15,25 @@ import java.util.Optional;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
-import jakarta.xml.ws.soap.SOAPFaultException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 
+import feign.codec.DecodeException;
+import jakarta.xml.ws.soap.SOAPFaultException;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.api.model.WebMessage;
 import se.sundsvall.webmessagesender.integration.db.WebMessageRepository;
 import se.sundsvall.webmessagesender.integration.oep.OepIntegration;
 
-import feign.codec.DecodeException;
-
 @Service
 public class WebMessageService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebMessageService.class);
-
 	private final WebMessageRepository webMessageRepository;
-
 	private final OepIntegration oepIntegration;
 
 	public WebMessageService(WebMessageRepository webMessageRepository, OepIntegration oepIntegration) {
@@ -46,9 +41,9 @@ public class WebMessageService {
 		this.oepIntegration = oepIntegration;
 	}
 
-	public WebMessage createWebMessage(final CreateWebMessageRequest createWebMessageRequest) {
+	public WebMessage create(final String municipalityId, final CreateWebMessageRequest createWebMessageRequest) {
 		final var oepMessageId = addOepMessage(createWebMessageRequest);
-		return toWebMessage(webMessageRepository.save(toWebMessageEntity(createWebMessageRequest, oepMessageId)));
+		return toWebMessage(webMessageRepository.save(toWebMessageEntity(municipalityId, createWebMessageRequest, oepMessageId)));
 	}
 
 	private Integer addOepMessage(CreateWebMessageRequest createWebMessageRequest) {
@@ -80,22 +75,23 @@ public class WebMessageService {
 			.findFirst();
 	}
 
-	public WebMessage getWebMessageById(final String id) {
-		return toWebMessage(webMessageRepository.findById(id).orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(ERROR_WEB_MESSAGE_NOT_FOUND, id))));
+	public WebMessage getByMunicipalityIdAndId(final String municipalityId, final String id) {
+		return toWebMessage(webMessageRepository.findByMunicipalityIdAndId(municipalityId, id).orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(ERROR_WEB_MESSAGE_NOT_FOUND, id))));
 	}
 
-	public List<WebMessage> getWebMessagesByPartyId(final String partyId) {
-		return toWebMessages(webMessageRepository.findByPartyIdOrderByCreated(partyId));
+	public List<WebMessage> getByMunicipalityIdAndPartyId(final String municipalityId, final String partyId) {
+		return toWebMessages(webMessageRepository.findByMunicipalityIdAndPartyIdOrderByCreated(municipalityId, partyId));
 	}
 
-	public List<WebMessage> getWebMessagesByExternalReference(final String key, final String value) {
-		return toWebMessages(webMessageRepository.findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated(key, value));
+	public List<WebMessage> getByMunicipalityIdAndExternalReference(final String municipalityId, final String key, final String value) {
+		return toWebMessages(webMessageRepository.findByMunicipalityIdAndExternalReferencesKeyAndExternalReferencesValueOrderByCreated(municipalityId, key, value));
 	}
 
-	public void deleteWebMessageById(final String id) {
-		if (isNotTrue(webMessageRepository.existsById(id))) {
-			throw Problem.valueOf(NOT_FOUND, format(ERROR_WEB_MESSAGE_NOT_FOUND, id));
-		}
-		webMessageRepository.deleteById(id);
+	public void deleteByMunicipalityIdAndId(final String municipalityId, final String id) {
+
+		final var entity = webMessageRepository.findByMunicipalityIdAndId(municipalityId, id)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(ERROR_WEB_MESSAGE_NOT_FOUND, id)));
+
+		webMessageRepository.delete(entity);
 	}
 }

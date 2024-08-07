@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.hibernate.Length;
+import org.hibernate.annotations.TimeZoneStorage;
+import org.hibernate.annotations.UuidGenerator;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,13 +22,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
-import org.hibernate.Length;
-import org.hibernate.annotations.TimeZoneStorage;
-import org.hibernate.annotations.UuidGenerator;
-
 @Entity
 @Table(name = "web_message",
 	indexes = {
+		@Index(name = "web_message_municipality_id_index", columnList = "municipality_id"),
 		@Index(name = "web_message_party_id_index", columnList = "party_id")
 	})
 public class WebMessageEntity {
@@ -33,6 +34,9 @@ public class WebMessageEntity {
 	@UuidGenerator
 	@Column(name = "id")
 	private String id;
+
+	@Column(name = "municipality_id")
+	private String municipalityId;
 
 	@Column(name = "party_id")
 	private String partyId;
@@ -70,6 +74,19 @@ public class WebMessageEntity {
 
 	public WebMessageEntity withId(final String id) {
 		this.id = id;
+		return this;
+	}
+
+	public String getMunicipalityId() {
+		return municipalityId;
+	}
+
+	public void setMunicipalityId(String municipalityId) {
+		this.municipalityId = municipalityId;
+	}
+
+	public WebMessageEntity withMunicipalityId(String municipalityId) {
+		this.municipalityId = municipalityId;
 		return this;
 	}
 
@@ -172,29 +189,23 @@ public class WebMessageEntity {
 	}
 
 	@Override
-	public String toString() {
-		return "WebMessageEntity{" +
-			"id='" + id + '\'' +
-			", partyId='" + partyId + '\'' +
-			", message='" + message + '\'' +
-			", oepInstance='" + oepInstance + '\'' +
-			", created=" + created +
-			", oepMessageId=" + oepMessageId +
-			", externalReferences=" + externalReferences +
-			", attachments=" + attachments +
-			'}';
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		final WebMessageEntity that = (WebMessageEntity) o;
-		return Objects.equals(id, that.id) && Objects.equals(partyId, that.partyId) && Objects.equals(message, that.message) && Objects.equals(oepInstance, that.oepInstance) && Objects.equals(created, that.created) && Objects.equals(oepMessageId, that.oepMessageId) && Objects.equals(externalReferences, that.externalReferences) && Objects.equals(attachments, that.attachments);
-	}
-
-	@Override
 	public int hashCode() {
-		return Objects.hash(id, partyId, message, oepInstance, created, oepMessageId, externalReferences, attachments);
+		return Objects.hash(attachments, created, externalReferences, id, message, municipalityId, oepInstance, oepMessageId, partyId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) { return true; }
+		if (!(obj instanceof final WebMessageEntity other)) { return false; }
+		return Objects.equals(attachments, other.attachments) && Objects.equals(created, other.created) && Objects.equals(externalReferences, other.externalReferences) && Objects.equals(id, other.id) && Objects.equals(message, other.message) && Objects
+			.equals(municipalityId, other.municipalityId) && Objects.equals(oepInstance, other.oepInstance) && Objects.equals(oepMessageId, other.oepMessageId) && Objects.equals(partyId, other.partyId);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("WebMessageEntity [id=").append(id).append(", municipalityId=").append(municipalityId).append(", partyId=").append(partyId).append(", message=").append(message).append(", oepInstance=").append(oepInstance).append(", created=")
+			.append(created).append(", oepMessageId=").append(oepMessageId).append(", externalReferences=").append(externalReferences).append(", attachments=").append(attachments).append("]");
+		return builder.toString();
 	}
 }

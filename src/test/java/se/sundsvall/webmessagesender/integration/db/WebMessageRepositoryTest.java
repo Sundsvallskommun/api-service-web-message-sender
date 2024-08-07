@@ -18,7 +18,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import jakarta.transaction.Transactional;
 import se.sundsvall.webmessagesender.integration.db.model.AttachmentEntity;
 import se.sundsvall.webmessagesender.integration.db.model.ExternalReferenceEntity;
 import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
@@ -33,11 +32,11 @@ import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
 @ActiveProfiles("junit")
 @Sql(scripts = {
 	"/db/scripts/truncate.sql",
-	"/db/scripts/WebMessageRepositoryTest.sql"
+	"/db/scripts/test-unit.sql"
 })
-@Transactional
 class WebMessageRepositoryTest {
 
+	private static final String MUNICIPALITY_ID = "2281";
 	private static final String ENTITY_1_ID = "1e098e28-d9ba-459c-94c7-5508be826c08";
 	private static final String ENTITY_1_PARTY_ID = "fbfbd90c-4c47-11ec-81d3-0242ac130003";
 	private static final String ENTITY_2_ID = "68cd9896-9918-4a80-bb41-e8fe0faf03f9";
@@ -49,67 +48,69 @@ class WebMessageRepositoryTest {
 	private WebMessageRepository webMessageRepository;
 
 	@Test
-	void findById() {
+	void findByMunicipalityIdAndId() {
 
 		// Call
-		final var webMessageOptional = webMessageRepository.findById(ENTITY_1_ID);
+		final var webMessageOptional = webMessageRepository.findByMunicipalityIdAndId(MUNICIPALITY_ID, ENTITY_1_ID);
 
 		// Verification
 		assertThat(webMessageOptional).isPresent();
 		assertThat(webMessageOptional.get().getId()).isEqualTo(ENTITY_1_ID);
+		assertThat(webMessageOptional.get().getMunicipalityId()).isEqualTo(MUNICIPALITY_ID);
 		assertThat(webMessageOptional.get().getPartyId()).isEqualTo(ENTITY_1_PARTY_ID);
 		assertThat(webMessageOptional.get().getExternalReferences()).hasSize(1);
 	}
 
 	@Test
-	void findByIdNotFound() {
+	void findByMunicipalityIdAndIdNotFound() {
 
 		// Call
-		final var webMessageOptional = webMessageRepository.findById("does-not-exist");
+		final var webMessageOptional = webMessageRepository.findByMunicipalityIdAndId(MUNICIPALITY_ID, "does-not-exist");
 
 		// Verification
 		assertThat(webMessageOptional).isNotPresent();
 	}
 
 	@Test
-	void findByPartyId() {
+	void findByMunicipalityIdAndPartyId() {
 
 		// Call
-		final var webMessageList = webMessageRepository.findByPartyIdOrderByCreated(ENTITY_1_PARTY_ID);
+		final var webMessageList = webMessageRepository.findByMunicipalityIdAndPartyIdOrderByCreated(MUNICIPALITY_ID, ENTITY_1_PARTY_ID);
 
 		// Verification
 		assertThat(webMessageList).isNotNull().hasSize(1);
-		assertThat(webMessageList.get(0).getId()).isEqualTo(ENTITY_1_ID);
-		assertThat(webMessageList.get(0).getPartyId()).isEqualTo(ENTITY_1_PARTY_ID);
-		assertThat(webMessageList.get(0).getExternalReferences()).hasSize(1);
+		assertThat(webMessageList.getFirst().getId()).isEqualTo(ENTITY_1_ID);
+		assertThat(webMessageList.getFirst().getMunicipalityId()).isEqualTo(MUNICIPALITY_ID);
+		assertThat(webMessageList.getFirst().getPartyId()).isEqualTo(ENTITY_1_PARTY_ID);
+		assertThat(webMessageList.getFirst().getExternalReferences()).hasSize(1);
 	}
 
 	@Test
-	void findByPartyIdNotFound() {
+	void findByMunicipalityIdAndPartyIdNotFound() {
 
 		// Call
-		final var webMessageList = webMessageRepository.findByPartyIdOrderByCreated("does-not-exist");
+		final var webMessageList = webMessageRepository.findByMunicipalityIdAndPartyIdOrderByCreated(MUNICIPALITY_ID, "does-not-exist");
 
 		// Verification
-		assertThat(webMessageList).isNotNull().isEmpty();
+		assertThat(webMessageList).isEmpty();
 	}
 
 	@Test
-	void findByExternalReferencesKeyValue() {
+	void findByMunicipalityIdAndExternalReferencesKeyValue() {
 
 		// Call
-		final var webMessagesList = webMessageRepository.findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated("common-key", "common-value");
+		final var webMessagesList = webMessageRepository.findByMunicipalityIdAndExternalReferencesKeyAndExternalReferencesValueOrderByCreated(MUNICIPALITY_ID, "common-key", "common-value");
 
 		// Verification
-		assertThat(webMessagesList).isNotEmpty().hasSize(3);
+		assertThat(webMessagesList).hasSize(3);
 		assertThat(webMessagesList).extracting(WebMessageEntity::getId).containsExactlyInAnyOrder(ENTITY_2_ID, ENTITY_3_ID, ENTITY_5_ID);
 	}
 
 	@Test
-	void findByExternalReferencesKeyValueNotFound() {
+	void findByMunicipalityIdAndExternalReferencesKeyValueNotFound() {
 
 		// Call
-		final var webMessagesList = webMessageRepository.findByExternalReferencesKeyAndExternalReferencesValueOrderByCreated("does-not-exist", "does-not-exist");
+		final var webMessagesList = webMessageRepository.findByMunicipalityIdAndExternalReferencesKeyAndExternalReferencesValueOrderByCreated(MUNICIPALITY_ID, "does-not-exist", "does-not-exist");
 
 		// Verification
 		assertThat(webMessagesList).isNotNull().isEmpty();
@@ -156,10 +157,11 @@ class WebMessageRepositoryTest {
 	void delete() {
 
 		// Pre-verification
-		assertThat(webMessageRepository.findById(ENTITY_4_ID)).isPresent();
+		final var entity = webMessageRepository.findById(ENTITY_4_ID);
+		assertThat(entity).isPresent();
 
 		// Call
-		webMessageRepository.deleteById(ENTITY_4_ID);
+		webMessageRepository.delete(entity.get());
 
 		// Post-verification
 		assertThat(webMessageRepository.findById(ENTITY_4_ID)).isNotPresent();
