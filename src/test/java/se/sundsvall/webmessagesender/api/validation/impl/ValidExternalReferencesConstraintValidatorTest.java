@@ -26,14 +26,14 @@ class ValidExternalReferencesConstraintValidatorTest {
 
 	@Mock
 	private ConstraintViolationBuilder constraintViolationBuilderMock;
-	
+
 	@InjectMocks
 	private ValidExternalReferencesConstraintValidator validator;
 
 	@Test
 	void validExternalReferences() {
 		final var externalReferences = List.of(ExternalReference.create().withKey("key").withValue("value"));
-		
+
 		assertThat(validator.isValid(externalReferences, constraintValidatorContextMock)).isTrue();
 
 		verifyNoInteractions(constraintValidatorContextMock, constraintViolationBuilderMock);
@@ -42,7 +42,7 @@ class ValidExternalReferencesConstraintValidatorTest {
 	@Test
 	void invalidExternalReferences() {
 		final var externalReferences = List.of(ExternalReference.create().withKey("key").withValue(null));
-		
+
 		assertThat(validator.isValid(externalReferences, constraintValidatorContextMock)).isFalse();
 
 		verifyNoInteractions(constraintValidatorContextMock, constraintViolationBuilderMock);
@@ -51,9 +51,9 @@ class ValidExternalReferencesConstraintValidatorTest {
 	@Test
 	void emptyExternalReferences() {
 		List<ExternalReference> externalReferences = Collections.emptyList();
-		
+
 		assertThat(validator.isValid(externalReferences, constraintValidatorContextMock)).isFalse();
-		
+
 		verifyNoInteractions(constraintValidatorContextMock, constraintViolationBuilderMock);
 	}
 
@@ -62,9 +62,9 @@ class ValidExternalReferencesConstraintValidatorTest {
 		when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(any())).thenReturn(constraintViolationBuilderMock);
 
 		final var externalReferences = List.of(ExternalReference.create().withKey("flowInstanceId").withValue("not_numeric"));
-		
+
 		assertThat(validator.isValid(externalReferences, constraintValidatorContextMock)).isFalse();
-		
+
 		verify(constraintValidatorContextMock).disableDefaultConstraintViolation();
 		verify(constraintValidatorContextMock).buildConstraintViolationWithTemplate("element with key 'flowInstanceId' must have value of numeric type");
 		verify(constraintViolationBuilderMock).addConstraintViolation();

@@ -1,5 +1,5 @@
 {
-  "title": "Internal Server Error",
-  "status": 500,
-  "detail": "${json-unit.regex}(Read timed out|timeout) executing POST http://(.*)/internal-oepMock"
+	"detail": "${json-unit.regex}(Read timed out|timeout) executing POST http://(.*)/internal-oepMock",
+	"title": "Internal Server Error",
+	"status": 500
 }

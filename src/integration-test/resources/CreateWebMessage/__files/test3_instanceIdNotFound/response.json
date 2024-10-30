@@ -1,5 +1,5 @@
 {
+	"detail": "The requested flow instance was not found",
 	"title": "Not Found",
-	"status": 404,
-	"detail": "The requested flow instance was not found"
+	"status": 404
 }

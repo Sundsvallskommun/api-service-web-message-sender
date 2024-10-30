@@ -9,7 +9,6 @@ import se.sundsvall.webmessagesender.api.validation.ValidInstance;
 
 public class ValidInstanceConstraintValidator implements ConstraintValidator<ValidInstance, String> {
 
-
 	@Override
 	public boolean isValid(final String value, final ConstraintValidatorContext context) {
 		if (isNull(value)) {

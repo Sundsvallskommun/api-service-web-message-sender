@@ -111,7 +111,9 @@ class WebMessageServiceTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "flowInstanceId", "flowinstanceid", "FLOWINSTANCEID" })
+	@ValueSource(strings = {
+		"flowInstanceId", "flowinstanceid", "FLOWINSTANCEID"
+	})
 	void createWithFlowInstanceId(String key) {
 
 		// Setup

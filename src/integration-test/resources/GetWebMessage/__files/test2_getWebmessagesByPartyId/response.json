@@ -1,30 +1,26 @@
 [
 	{
-		"id": "3472ab5b-fca7-4eaf-8eec-8115c9710526",
 		"municipalityId": "2281",
-		"partyId": "b7bd0e55-0811-4d3a-91d9-6bab7fd9ce5e",
-		"oepInstance": "external",
-		"externalReferences": [
-			{
-				"key": "common-key",
-				"value": "common-value"
-			}
-		],
+		"externalReferences": [{
+			"value": "common-value",
+			"key": "common-key"
+		}],
+		"attachments": [],
 		"created": "2021-11-23T10:05:48.198+01:00",
-		"attachments": []
+		"id": "3472ab5b-fca7-4eaf-8eec-8115c9710526",
+		"oepInstance": "external",
+		"partyId": "b7bd0e55-0811-4d3a-91d9-6bab7fd9ce5e"
 	},
 	{
-		"id": "3472ab5b-fca7-4eaf-8eec-8115c9710527",
 		"municipalityId": "2281",
-		"partyId": "b7bd0e55-0811-4d3a-91d9-6bab7fd9ce5e",
-		"oepInstance": "internal",
-		"externalReferences": [
-			{
-				"key": "common-key",
-				"value": "common-value"
-			}
-		],
+		"externalReferences": [{
+			"value": "common-value",
+			"key": "common-key"
+		}],
+		"attachments": [],
 		"created": "2021-11-23T10:05:48.198+01:00",
-		"attachments": []
+		"id": "3472ab5b-fca7-4eaf-8eec-8115c9710527",
+		"oepInstance": "internal",
+		"partyId": "b7bd0e55-0811-4d3a-91d9-6bab7fd9ce5e"
 	}
 ]

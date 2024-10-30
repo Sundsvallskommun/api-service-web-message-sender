@@ -67,8 +67,10 @@ public class Attachment {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 		Attachment that = (Attachment) o;
 		return Objects.equals(fileName, that.fileName) && Objects.equals(base64Data, that.base64Data) && Objects.equals(mimeType, that.mimeType);
 	}
