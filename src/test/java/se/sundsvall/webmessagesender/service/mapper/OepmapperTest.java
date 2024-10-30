@@ -19,7 +19,7 @@ import se.sundsvall.webmessagesender.generatedsources.oep.Attachment;
 
 class OepmapperTest {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
-	
+
 	@Test
 	void testToAddMessage() throws Exception {
 		final var base64Data = new String(Base64.getEncoder().encode("base64Data".getBytes()));
@@ -28,7 +28,7 @@ class OepmapperTest {
 		final var attachment = create().withBase64Data(base64Data).withFileName("fileName").withMimeType("mimeType");
 		final var addMessage = toAddMessage(message, flowInstanceId, List.of(attachment));
 		final var base64binary = MAPPER.convertValue(attachment.getBase64Data(), byte[].class);
-		
+
 		assertThat(addMessage.getExternalID()).isNull();
 		assertThat(addMessage.getPrincipal()).isNull();
 		assertThat(addMessage.getFlowInstanceID()).isEqualTo(flowInstanceId);
@@ -38,13 +38,13 @@ class OepmapperTest {
 		assertThat(addMessage.getMessage().getMessage()).isEqualTo(message);
 		assertThat(addMessage.getMessage().getUserID()).isNull();
 		assertThat(addMessage.getMessage().getAttachments())
-		.extracting(
-			Attachment::getEncodedData,
-			Attachment::getFilename,
-			Attachment::getSize)
-		.containsExactly(tuple(
-			base64binary,
-			attachment.getFileName(),
-			(long)base64binary.length));
+			.extracting(
+				Attachment::getEncodedData,
+				Attachment::getFilename,
+				Attachment::getSize)
+			.containsExactly(tuple(
+				base64binary,
+				attachment.getFileName(),
+				(long) base64binary.length));
 	}
 }

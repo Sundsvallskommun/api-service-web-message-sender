@@ -26,7 +26,9 @@ import feign.soap.SOAPDecoder;
 import feign.soap.SOAPEncoder;
 import feign.soap.SOAPErrorDecoder;
 
-@SpringBootTest(classes = {Application.class})
+@SpringBootTest(classes = {
+	Application.class
+})
 @ActiveProfiles("junit")
 class OepExternalConfigurationTest {
 

@@ -1,21 +1,13 @@
 {
-  "name": "internal-oep",
-  "request": {
-    "method": "POST",
-    "url": "/internal-oepMock",
-    "headers": {
-      "Authorization": {
-        "equalTo": "Basic b2VwLnVzZXJuYW1lOm9lcC5jbGllbnQuaW50ZXJuYWwucGFzc3dvcmQ="
-      }
-    },
-    "bodyPatterns": [
-      {
-        "matchesXPath": "//flowInstanceID[text()=356434]"
-      }
-    ]
-  },
-  "response": {
-    "status": 500,
-    "fixedDelayMilliseconds": 1100
-  }
+	"request": {
+		"headers": {"Authorization": {"equalTo": "Basic b2VwLnVzZXJuYW1lOm9lcC5jbGllbnQuaW50ZXJuYWwucGFzc3dvcmQ="}},
+		"method": "POST",
+		"bodyPatterns": [{"matchesXPath": "//flowInstanceID[text()=356434]"}],
+		"url": "/internal-oepMock"
+	},
+	"response": {
+		"fixedDelayMilliseconds": 1100,
+		"status": 500
+	},
+	"name": "internal-oep"
 }

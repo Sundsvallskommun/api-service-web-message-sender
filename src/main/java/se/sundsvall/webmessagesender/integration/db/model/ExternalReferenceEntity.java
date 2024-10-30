@@ -20,7 +20,9 @@ import java.util.Objects;
 	@Index(name = "external_reference_ref_key_index", columnList = "ref_key"),
 	@Index(name = "external_reference_ref_value_index", columnList = "ref_value")
 }, uniqueConstraints = {
-	@UniqueConstraint(name = "unique_external_reference", columnNames = { "ref_key", "ref_value", "parent_id" })
+	@UniqueConstraint(name = "unique_external_reference", columnNames = {
+		"ref_key", "ref_value", "parent_id"
+	})
 })
 public class ExternalReferenceEntity {
 
@@ -96,7 +98,9 @@ public class ExternalReferenceEntity {
 	}
 
 	@Override
-	public int hashCode() { return Objects.hash(id, key, value); }
+	public int hashCode() {
+		return Objects.hash(id, key, value);
+	}
 
 	@Override
 	public boolean equals(Object obj) {

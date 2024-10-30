@@ -9,8 +9,7 @@ import se.sundsvall.webmessagesender.integration.oep.config.OepInternalConfigura
 @FeignClient(
 	name = OEP_INTERNAL_CLIENT,
 	url = "${integration.oep.internal-url}",
-	configuration = OepInternalConfiguration.class
-)
+	configuration = OepInternalConfiguration.class)
 public interface OepInternalClient extends OepBaseClient {
 
 }
