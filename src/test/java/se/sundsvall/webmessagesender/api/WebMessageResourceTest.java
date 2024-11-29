@@ -66,6 +66,35 @@ class WebMessageResourceTest {
 	}
 
 	@Test
+	void createWebMessageWithoutPartyId() {
+
+		// Parameter values
+		final var municipalityId = "2281";
+		final var createWebMessageRequest = CreateWebMessageRequest.create()
+			.withMessage("Test message")
+			.withOepInstance("external")
+			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
+			.withPartyId(null);
+
+		// Mock
+		final var id = UUID.randomUUID().toString();
+		when(webMessageService.create(any(), any())).thenReturn(WebMessage.create().withId(id));
+
+		webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
+			.contentType(APPLICATION_JSON)
+			.bodyValue(createWebMessageRequest)
+			.exchange()
+			.expectStatus().isCreated()
+			.expectHeader().location("/" + municipalityId + "/webmessages/" + id)
+			.expectHeader().contentType(ALL_VALUE)
+			.expectBody().isEmpty();
+
+		// Verification
+		verify(webMessageService).create(municipalityId, createWebMessageRequest);
+	}
+
+	@Test
 	void deleteWebMessageById() {
 
 		// Parameter values

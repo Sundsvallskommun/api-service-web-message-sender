@@ -1,0 +1,13 @@
+{
+	"request": {
+		"headers": {"Authorization": {"equalTo": "Basic b2VwLnVzZXJuYW1lOm9lcC5jbGllbnQuZXh0ZXJuYWwucGFzc3dvcmQ="}},
+		"method": "POST",
+		"bodyPatterns": [{"matchesXPath": "//flowInstanceID[text()=356436]"}],
+		"url": "/external-oepMock"
+	},
+	"response": {
+		"bodyFileName": "test5_createExternalMessageSuccessful/response/addMessageResponse.xml",
+		"status": 200
+	},
+	"name": "external-oep"
+}

@@ -35,34 +35,6 @@ class WebMessageResourceFailuresTest {
 	private WebTestClient webTestClient;
 
 	@Test
-	void createWebMessageMissingPartyId() {
-
-		// Parameter values
-		final var municipalityId = "2281";
-		final var createWebMessageRequest = CreateWebMessageRequest.create()
-			.withMessage("Test message")
-			.withOepInstance("external")
-			.withExternalReferences(List.of(ExternalReference.create().withKey("key").withValue("value")))
-			.withPartyId(null); // Missing partyId
-
-		webTestClient.post()
-			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
-			.contentType(APPLICATION_JSON)
-			.bodyValue(createWebMessageRequest)
-			.exchange()
-			.expectStatus().isBadRequest()
-			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
-			.expectBody()
-			.jsonPath("$.title").isEqualTo("Constraint Violation")
-			.jsonPath("$.status").isEqualTo(BAD_REQUEST.value())
-			.jsonPath("$.violations[0].field").isEqualTo("partyId")
-			.jsonPath("$.violations[0].message").isEqualTo("not a valid UUID");
-
-		// Verification
-		verifyNoInteractions(webMessageService);
-	}
-
-	@Test
 	void createWebMessageInvalidPartyId() {
 
 		// Parameter values
@@ -304,9 +276,7 @@ class WebMessageResourceFailuresTest {
 			.jsonPath("$.violations[0].field").isEqualTo("externalReferences")
 			.jsonPath("$.violations[0].message").isEqualTo("can not be empty or contain elements with empty keys or values")
 			.jsonPath("$.violations[1].field").isEqualTo("oepInstance")
-			.jsonPath("$.violations[1].message").isEqualTo("instance can only be 'internal' or 'external'")
-			.jsonPath("$.violations[2].field").isEqualTo("partyId")
-			.jsonPath("$.violations[2].message").isEqualTo("not a valid UUID");
+			.jsonPath("$.violations[1].message").isEqualTo("instance can only be 'internal' or 'external'");
 
 		// Verification
 		verifyNoInteractions(webMessageService);
