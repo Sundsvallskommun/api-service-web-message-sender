@@ -1,6 +1,7 @@
 package se.sundsvall.webmessagesender.api.model;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,8 +21,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "CreateWebMessageRequest model")
 public class CreateWebMessageRequest {
 
-	@Schema(description = "Party ID (e.g. a personId or an organizationId)", example = "81471222-5798-11e9-ae24-57fa13b361e1")
-	@ValidUuid
+	@Schema(description = "Party ID (e.g. a personId or an organizationId)", example = "81471222-5798-11e9-ae24-57fa13b361e1", requiredMode = NOT_REQUIRED)
+	@ValidUuid(nullable = true)
 	private String partyId;
 
 	@Schema(description = "The message", example = "This is a message")

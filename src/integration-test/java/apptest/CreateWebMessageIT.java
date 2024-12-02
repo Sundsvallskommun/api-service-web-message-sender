@@ -99,4 +99,23 @@ class CreateWebMessageIT extends AbstractAppTest {
 		final var webMessages = repository.findByMunicipalityIdAndExternalReferencesKeyAndExternalReferencesValueOrderByCreated(MUNICIPALITY_ID, "flowInstanceId", "356435");
 		assertThat(webMessages).hasSize(1);
 	}
+
+	@Test
+	void test6_createMessageWithoutPartyId() {
+		setupCall()
+			.withServicePath(PATH)
+			.withHttpMethod(POST)
+			.withRequest(REQUEST_FILE)
+			.withExpectedResponseStatus(CREATED)
+			.withExpectedResponseHeader(LOCATION, List.of("^/2281/webmessages(.*)$"))
+			.sendRequestAndVerifyResponse();
+
+		final var webMessages = repository.findByMunicipalityIdAndExternalReferencesKeyAndExternalReferencesValueOrderByCreated(MUNICIPALITY_ID, "flowInstanceId", "356436");
+		assertThat(webMessages).hasSize(1);
+		assertThat(webMessages.getFirst()).satisfies(webMessage -> {
+			assertThat(webMessage.getOepInstance()).isEqualTo("external");
+			assertThat(webMessage.getPartyId()).isNull();
+			assertThat(webMessage.getMessage()).isEqualTo("This is a message");
+		});
+	}
 }
