@@ -2,7 +2,6 @@ package se.sundsvall.webmessagesender.integration.oep.client;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import se.sundsvall.webmessagesender.generatedsources.oep.AddMessage;
 import se.sundsvall.webmessagesender.generatedsources.oep.AddMessageResponse;
 

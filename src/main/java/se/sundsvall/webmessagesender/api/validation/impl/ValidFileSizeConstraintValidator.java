@@ -4,12 +4,10 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.isBase64;
 
-import java.nio.charset.StandardCharsets;
-
-import org.springframework.beans.factory.annotation.Value;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import java.nio.charset.StandardCharsets;
+import org.springframework.beans.factory.annotation.Value;
 import se.sundsvall.webmessagesender.api.validation.ValidFileSize;
 
 public class ValidFileSizeConstraintValidator implements ConstraintValidator<ValidFileSize, String> {

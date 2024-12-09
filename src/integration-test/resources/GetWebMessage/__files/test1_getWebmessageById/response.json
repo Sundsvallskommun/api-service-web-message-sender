@@ -1,9 +1,11 @@
 {
 	"municipalityId": "2281",
-	"externalReferences": [{
-		"value": "value1",
-		"key": "key1"
-	}],
+	"externalReferences": [
+		{
+			"value": "value1",
+			"key": "key1"
+		}
+	],
 	"attachments": [],
 	"created": "2021-11-21T10:05:48.198+01:00",
 	"id": "1e098e28-d9ba-459c-94c7-5508be826c08",

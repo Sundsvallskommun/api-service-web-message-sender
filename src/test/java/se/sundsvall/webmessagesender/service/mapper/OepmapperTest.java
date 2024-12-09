@@ -8,13 +8,10 @@ import static org.assertj.core.groups.Tuple.tuple;
 import static se.sundsvall.webmessagesender.api.model.Attachment.create;
 import static se.sundsvall.webmessagesender.service.mapper.OepMapper.toAddMessage;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Base64;
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import se.sundsvall.webmessagesender.generatedsources.oep.Attachment;
 
 class OepmapperTest {

@@ -1,7 +1,6 @@
 package se.sundsvall.webmessagesender.integration.oep;
 
 import org.springframework.stereotype.Component;
-
 import se.sundsvall.webmessagesender.generatedsources.oep.AddMessage;
 import se.sundsvall.webmessagesender.generatedsources.oep.AddMessageResponse;
 import se.sundsvall.webmessagesender.integration.oep.client.OepExternalClient;

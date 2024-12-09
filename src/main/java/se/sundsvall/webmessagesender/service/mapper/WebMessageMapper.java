@@ -9,7 +9,6 @@ import static se.sundsvall.webmessagesender.service.mapper.MimeTypeUtility.detec
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
-
 import se.sundsvall.webmessagesender.api.model.Attachment;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
