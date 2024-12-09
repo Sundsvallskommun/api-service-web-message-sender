@@ -10,19 +10,16 @@ import static se.sundsvall.webmessagesender.service.mapper.WebMessageMapper.toWe
 import static se.sundsvall.webmessagesender.service.mapper.WebMessageMapper.toWebMessageEntity;
 import static se.sundsvall.webmessagesender.service.mapper.WebMessageMapper.toWebMessages;
 
+import feign.codec.DecodeException;
+import jakarta.xml.ws.soap.SOAPFaultException;
 import java.util.List;
 import java.util.Optional;
-
 import javax.xml.datatype.DatatypeConfigurationException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
-
-import feign.codec.DecodeException;
-import jakarta.xml.ws.soap.SOAPFaultException;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.api.model.WebMessage;

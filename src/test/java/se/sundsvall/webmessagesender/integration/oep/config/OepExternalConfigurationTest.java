@@ -5,8 +5,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import feign.auth.BasicAuthRequestInterceptor;
+import feign.soap.SOAPDecoder;
+import feign.soap.SOAPEncoder;
+import feign.soap.SOAPErrorDecoder;
 import java.util.Base64;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -17,14 +20,8 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
 import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 import se.sundsvall.webmessagesender.Application;
-
-import feign.auth.BasicAuthRequestInterceptor;
-import feign.soap.SOAPDecoder;
-import feign.soap.SOAPEncoder;
-import feign.soap.SOAPErrorDecoder;
 
 @SpringBootTest(classes = {
 	Application.class

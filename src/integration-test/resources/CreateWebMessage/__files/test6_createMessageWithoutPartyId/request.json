@@ -1,8 +1,10 @@
 {
-	"externalReferences": [{
-		"value": "356436",
-		"key": "flowInstanceId"
-	}],
+	"externalReferences": [
+		{
+			"value": "356436",
+			"key": "flowInstanceId"
+		}
+	],
 	"oepInstance": "external",
 	"message": "This is a message"
 }

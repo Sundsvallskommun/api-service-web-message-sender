@@ -1,12 +1,10 @@
 package se.sundsvall.webmessagesender.integration.db;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
 
 @Transactional

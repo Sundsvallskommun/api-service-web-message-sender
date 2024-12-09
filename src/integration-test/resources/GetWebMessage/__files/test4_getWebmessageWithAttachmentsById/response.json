@@ -1,14 +1,18 @@
 {
 	"municipalityId": "2281",
-	"externalReferences": [{
-		"value": "unique-value",
-		"key": "common-key"
-	}],
-	"attachments": [{
-		"fileName": "test_image.jpg",
-		"base64Data": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAeSURBVDhPY1Da6EMSYiBJNVDxqAZiQmw0lAZHKAEAaskfEED3lr0AAAAASUVORK5CYII=",
-		"mimeType": "image/jpeg"
-	}],
+	"externalReferences": [
+		{
+			"value": "unique-value",
+			"key": "common-key"
+		}
+	],
+	"attachments": [
+		{
+			"fileName": "test_image.jpg",
+			"base64Data": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAeSURBVDhPY1Da6EMSYiBJNVDxqAZiQmw0lAZHKAEAaskfEED3lr0AAAAASUVORK5CYII=",
+			"mimeType": "image/jpeg"
+		}
+	],
 	"created": "2022-09-29T11:08:23.766+02:00",
 	"id": "37317c16-3fd6-11ed-b878-0242ac120002",
 	"oepInstance": "internal",

@@ -1,11 +1,21 @@
 {
 	"request": {
-		"headers": {"Authorization": {"equalTo": "Basic b2VwLnVzZXJuYW1lOm9lcC5jbGllbnQuaW50ZXJuYWwucGFzc3dvcmQ="}},
+		"headers": {
+			"Authorization": {
+				"equalTo": "Basic b2VwLnVzZXJuYW1lOm9lcC5jbGllbnQuaW50ZXJuYWwucGFzc3dvcmQ="
+			}
+		},
 		"method": "POST",
 		"bodyPatterns": [
-			{"matchesXPath": "//flowInstanceID[text()=2154]"},
-			{"matchesXPath": "//filename[text()='test.pdf']"},
-			{"matchesXPath": "//size[text()=18163]"}
+			{
+				"matchesXPath": "//flowInstanceID[text()=2154]"
+			},
+			{
+				"matchesXPath": "//filename[text()='test.pdf']"
+			},
+			{
+				"matchesXPath": "//size[text()=18163]"
+			}
 		],
 		"url": "/internal-oepMock"
 	},

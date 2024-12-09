@@ -1,8 +1,16 @@
 {
 	"request": {
-		"headers": {"Authorization": {"equalTo": "Basic b2VwLnVzZXJuYW1lOm9lcC5jbGllbnQuaW50ZXJuYWwucGFzc3dvcmQ="}},
+		"headers": {
+			"Authorization": {
+				"equalTo": "Basic b2VwLnVzZXJuYW1lOm9lcC5jbGllbnQuaW50ZXJuYWwucGFzc3dvcmQ="
+			}
+		},
 		"method": "POST",
-		"bodyPatterns": [{"matchesXPath": "//flowInstanceID[text()=356435]"}],
+		"bodyPatterns": [
+			{
+				"matchesXPath": "//flowInstanceID[text()=356435]"
+			}
+		],
 		"url": "/internal-oepMock"
 	},
 	"response": {

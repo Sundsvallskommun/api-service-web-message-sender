@@ -7,10 +7,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
-
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
-
 import se.sundsvall.webmessagesender.api.model.Attachment;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
