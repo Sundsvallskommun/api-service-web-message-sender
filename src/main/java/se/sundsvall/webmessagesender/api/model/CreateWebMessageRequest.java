@@ -1,9 +1,7 @@
 package se.sundsvall.webmessagesender.api.model;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -13,13 +11,15 @@ import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 import se.sundsvall.webmessagesender.api.validation.ValidExternalReferences;
 import se.sundsvall.webmessagesender.api.validation.ValidInstance;
 
-@JsonInclude(NON_NULL)
 @Schema(description = "CreateWebMessageRequest model")
 public class CreateWebMessageRequest {
 
 	@Schema(description = "Party ID (e.g. a personId or an organizationId)", example = "81471222-5798-11e9-ae24-57fa13b361e1", requiredMode = NOT_REQUIRED)
 	@ValidUuid(nullable = true)
 	private String partyId;
+
+	@Schema(description = "The sender", requiredMode = NOT_REQUIRED)
+	private Sender sender;
 
 	@Schema(description = "The message", example = "This is a message")
 	private String message;
@@ -52,6 +52,19 @@ public class CreateWebMessageRequest {
 
 	public CreateWebMessageRequest withPartyId(String partyId) {
 		this.partyId = partyId;
+		return this;
+	}
+
+	public Sender getSender() {
+		return sender;
+	}
+
+	public void setSender(Sender sender) {
+		this.sender = sender;
+	}
+
+	public CreateWebMessageRequest withSender(Sender sender) {
+		this.sender = sender;
 		return this;
 	}
 
@@ -108,28 +121,28 @@ public class CreateWebMessageRequest {
 	}
 
 	@Override
-	public String toString() {
-		return "CreateWebMessageRequest{" +
-			"partyId='" + partyId + '\'' +
-			", message='" + message + '\'' +
-			", oepInstance='" + oepInstance + '\'' +
-			", externalReferences=" + externalReferences +
-			", attachments=" + attachments +
-			'}';
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		final CreateWebMessageRequest that = (CreateWebMessageRequest) o;
-		return Objects.equals(partyId, that.partyId) && Objects.equals(message, that.message) && Objects.equals(oepInstance, that.oepInstance) && Objects.equals(externalReferences, that.externalReferences) && Objects.equals(attachments, that.attachments);
-	}
-
-	@Override
 	public int hashCode() {
-		return Objects.hash(partyId, message, oepInstance, externalReferences, attachments);
+		return Objects.hash(attachments, externalReferences, message, oepInstance, partyId, sender);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		CreateWebMessageRequest other = (CreateWebMessageRequest) obj;
+		return Objects.equals(attachments, other.attachments) && Objects.equals(externalReferences, other.externalReferences) && Objects.equals(message, other.message) && Objects.equals(oepInstance, other.oepInstance) && Objects.equals(partyId,
+			other.partyId) && Objects.equals(sender, other.sender);
+	}
+
+	@Override
+	public String toString() {
+		return "CreateWebMessageRequest [partyId=" + partyId + ", sender=" + sender + ", message=" + message + ", oepInstance=" + oepInstance + ", externalReferences=" + externalReferences + ", attachments=" + attachments + "]";
 	}
 }

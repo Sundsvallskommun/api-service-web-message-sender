@@ -40,11 +40,7 @@ import se.sundsvall.webmessagesender.service.WebMessageService;
 @RestController
 @Validated
 @Tag(name = "WebMessages", description = "Web messages")
-@RequestMapping(
-	path = "/{municipalityId}/webmessages",
-	produces = {
-		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
-	})
+@RequestMapping(path = "/{municipalityId}/webmessages", produces = APPLICATION_JSON_VALUE)
 @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
 	Problem.class, ConstraintViolationProblem.class
 })))
@@ -60,9 +56,10 @@ class WebMessageResource {
 	}
 
 	@PostMapping(consumes = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Create web message")
-	@ApiResponse(responseCode = "201", headers = @Header(name = LOCATION, schema = @Schema(type = "string")), description = "Successful operation", useReturnTypeSchema = true)
-	public ResponseEntity<Void> createWebMessage(
+	@Operation(summary = "Create web message", responses = {
+		@ApiResponse(responseCode = "201", headers = @Header(name = LOCATION, schema = @Schema(type = "string")), description = "Successful operation", useReturnTypeSchema = true)
+	})
+	ResponseEntity<Void> createWebMessage(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Valid @RequestBody final CreateWebMessageRequest request) {
 
@@ -72,9 +69,10 @@ class WebMessageResource {
 	}
 
 	@GetMapping(path = "/{id}")
-	@Operation(summary = "Get web message by ID")
-	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
-	public ResponseEntity<WebMessage> getWebMessageById(
+	@Operation(summary = "Get web message by ID", responses = {
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
+	})
+	ResponseEntity<WebMessage> getWebMessageById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Web message ID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid @PathVariable(name = "id", required = true) String id) {
 
@@ -82,9 +80,10 @@ class WebMessageResource {
 	}
 
 	@GetMapping(path = "/recipients/{partyId}")
-	@Operation(summary = "Get web messages by partyId")
-	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
-	public ResponseEntity<List<WebMessage>> getWebMessagesByPartyId(
+	@Operation(summary = "Get web messages by partyId", responses = {
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
+	})
+	ResponseEntity<List<WebMessage>> getWebMessagesByPartyId(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "partyId", description = "PartyID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "partyId", required = true) @ValidUuid String partyId) {
 
@@ -92,9 +91,10 @@ class WebMessageResource {
 	}
 
 	@GetMapping(path = "/external-references/{key}/{value}")
-	@Operation(summary = "Get web messages by externalReference")
-	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
-	public ResponseEntity<List<WebMessage>> getWebMessagesByExternalReference(
+	@Operation(summary = "Get web messages by externalReference", responses = {
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
+	})
+	ResponseEntity<List<WebMessage>> getWebMessagesByExternalReference(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "key", description = "The external-reference key", example = "flowInstanceId") @PathVariable(value = "key", required = true) @Size(min = 3, max = 128) String key,
 		@Parameter(name = "value", description = "The external-reference value", example = "356t4r34f") @PathVariable(value = "value", required = true) @Size(min = 3, max = 128) String value) {
@@ -103,9 +103,10 @@ class WebMessageResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	@Operation(summary = "Delete web message by ID")
-	@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true)
-	public ResponseEntity<Void> deleteWebMessageById(
+	@Operation(summary = "Delete web message by ID", responses = {
+		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true)
+	})
+	ResponseEntity<Void> deleteWebMessageById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Web message ID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid @PathVariable String id) {
 

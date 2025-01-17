@@ -4,17 +4,16 @@
 	<parent>
 		<groupId>se.sundsvall.dept44</groupId>
 		<artifactId>dept44-service-parent</artifactId>
-		<version>6.0.5</version>
+		<version>6.0.6</version>
 		<relativePath />
 		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>se.sundsvall</groupId>
 	<artifactId>api-service-web-message-sender</artifactId>
-	<version>3.1</version>
+	<version>3.2</version>
 	<name>api-service-web-message-sender</name>
 	<description>Service for sending web messages to Open-E platform</description>
 	<properties>
-		<!-- Service properties -->
 		<jaxb2-maven-plugin.version>3.2.0</jaxb2-maven-plugin.version>
 		<jaxb2-fluent-api.version>3.0</jaxb2-fluent-api.version>
 		<overviewproject.mimetypes.version>2.0.0</overviewproject.mimetypes.version>
@@ -73,6 +72,7 @@
 				<configuration>
 					<!-- Enable fluent -->
 					<arguments>
+						<argument>-wsdl</argument>
 						<argument>-Xfluent-api</argument>
 					</arguments>
 					<outputDirectory>${project.build.directory}/generated-sources/</outputDirectory>

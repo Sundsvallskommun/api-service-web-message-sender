@@ -1,6 +1,7 @@
 package se.sundsvall.webmessagesender.service;
 
 import static java.lang.String.format;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.webmessagesender.integration.oep.mapper.OepSoapFaultMapper.convertToThrowableProblem;
 import static se.sundsvall.webmessagesender.service.ServiceConstants.ERROR_WEB_MESSAGE_NOT_FOUND;
@@ -19,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.api.model.WebMessage;
@@ -58,7 +58,7 @@ public class WebMessageService {
 			throw e;
 		} catch (final DatatypeConfigurationException e) {
 			LOGGER.error("Could not obtain an instance of DatatypeFactory", e);
-			throw Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "Configuration error in service");
+			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "Configuration error in service");
 		} catch (final SOAPFaultException soapFaultException) {
 			throw convertToThrowableProblem(soapFaultException);
 		}

@@ -1,6 +1,7 @@
 package se.sundsvall.webmessagesender.integration.db.model;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
+import static org.hibernate.Length.LONG32;
 import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 
 import jakarta.persistence.CascadeType;
@@ -16,7 +17,6 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import org.hibernate.Length;
 import org.hibernate.annotations.TimeZoneStorage;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -39,7 +39,7 @@ public class WebMessageEntity {
 	@Column(name = "party_id")
 	private String partyId;
 
-	@Column(name = "message", length = Length.LONG32)
+	@Column(name = "message", length = LONG32)
 	private String message;
 
 	@Column(name = "oep_instance")
