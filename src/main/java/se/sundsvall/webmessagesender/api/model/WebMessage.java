@@ -1,6 +1,7 @@
 package se.sundsvall.webmessagesender.api.model;
 
 import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,14 +10,17 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Schema(description = "WebMessage model")
+@Schema(description = "WebMessage model", accessMode = READ_ONLY)
 public class WebMessage {
 
 	@Schema(description = "Web Message ID", example = "f0882f1d-06bc-47fd-b017-1d8307f5ce95")
 	private String id;
 
-	@Schema(description = "Municipality ID", example = "2281", accessMode = READ_ONLY)
+	@Schema(description = "Municipality ID", example = "2281")
 	private String municipalityId;
+
+	@Schema(description = "The sender")
+	private Sender sender;
 
 	@Schema(description = "Party ID (e.g. a personId or an organizationId)", example = "81471222-5798-11e9-ae24-57fa13b361e1")
 	private String partyId;
@@ -30,8 +34,8 @@ public class WebMessage {
 	@ArraySchema(schema = @Schema(implementation = ExternalReference.class))
 	private List<ExternalReference> externalReferences;
 
-	@Schema(description = "Created timestamp", accessMode = READ_ONLY)
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	@Schema(description = "Created timestamp")
+	@DateTimeFormat(iso = DATE_TIME)
 	private OffsetDateTime created;
 
 	@ArraySchema(schema = @Schema(implementation = Attachment.class))
@@ -64,6 +68,19 @@ public class WebMessage {
 
 	public WebMessage withMunicipalityId(String municipalityId) {
 		this.municipalityId = municipalityId;
+		return this;
+	}
+
+	public Sender getSender() {
+		return sender;
+	}
+
+	public void setSender(Sender sender) {
+		this.sender = sender;
+	}
+
+	public WebMessage withSender(Sender sender) {
+		this.sender = sender;
 		return this;
 	}
 
@@ -147,22 +164,28 @@ public class WebMessage {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(attachments, created, externalReferences, id, message, municipalityId, oepInstance, partyId);
+		return Objects.hash(attachments, created, externalReferences, id, message, municipalityId, oepInstance, partyId, sender);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) { return true; }
-		if (!(obj instanceof final WebMessage other)) { return false; }
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		WebMessage other = (WebMessage) obj;
 		return Objects.equals(attachments, other.attachments) && Objects.equals(created, other.created) && Objects.equals(externalReferences, other.externalReferences) && Objects.equals(id, other.id) && Objects.equals(message, other.message) && Objects
-			.equals(municipalityId, other.municipalityId) && Objects.equals(oepInstance, other.oepInstance) && Objects.equals(partyId, other.partyId);
+			.equals(municipalityId, other.municipalityId) && Objects.equals(oepInstance, other.oepInstance) && Objects.equals(partyId, other.partyId) && Objects.equals(sender, other.sender);
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("WebMessage [id=").append(id).append(", municipalityId=").append(municipalityId).append(", partyId=").append(partyId).append(", message=").append(message).append(", oepInstance=").append(oepInstance).append(", externalReferences=")
-			.append(externalReferences).append(", created=").append(created).append(", attachments=").append(attachments).append("]");
-		return builder.toString();
+		return "WebMessage [id=" + id + ", municipalityId=" + municipalityId + ", sender=" + sender + ", partyId=" + partyId + ", message=" + message + ", oepInstance=" + oepInstance + ", externalReferences=" + externalReferences + ", created=" + created
+			+ ", attachments=" + attachments + "]";
 	}
 }

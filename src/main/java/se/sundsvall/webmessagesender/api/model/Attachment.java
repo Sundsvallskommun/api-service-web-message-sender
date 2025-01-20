@@ -1,5 +1,7 @@
 package se.sundsvall.webmessagesender.api.model;
 
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Objects;
@@ -13,7 +15,7 @@ public class Attachment {
 	@NotBlank
 	private String fileName;
 
-	@Schema(description = "mimeType of file", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "mimeType of file", accessMode = READ_ONLY)
 	private String mimeType;
 
 	@Schema(description = "Base 64 encoded file, max size 10 MB", format = "base64")
@@ -66,10 +68,12 @@ public class Attachment {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		Attachment that = (Attachment) o;
 		return Objects.equals(fileName, that.fileName) && Objects.equals(base64Data, that.base64Data) && Objects.equals(mimeType, that.mimeType);
 	}
