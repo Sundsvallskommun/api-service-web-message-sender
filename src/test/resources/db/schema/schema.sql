@@ -23,6 +23,7 @@
         municipality_id varchar(255),
         oep_instance varchar(255),
         party_id varchar(255),
+        sender_user_id varchar(255),
         message longtext,
         primary key (id)
     ) engine=InnoDB;

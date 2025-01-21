@@ -12,6 +12,7 @@ import java.util.Optional;
 import se.sundsvall.webmessagesender.api.model.Attachment;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
+import se.sundsvall.webmessagesender.api.model.Sender;
 import se.sundsvall.webmessagesender.api.model.WebMessage;
 import se.sundsvall.webmessagesender.integration.db.model.AttachmentEntity;
 import se.sundsvall.webmessagesender.integration.db.model.ExternalReferenceEntity;
@@ -32,7 +33,8 @@ public final class WebMessageMapper {
 			.withMessage(createWebMessageRequest.getMessage())
 			.withMunicipalityId(municipalityId)
 			.withOepMessageId(oepMessageId)
-			.withPartyId(createWebMessageRequest.getPartyId());
+			.withPartyId(createWebMessageRequest.getPartyId())
+			.withSenderUserId(Optional.ofNullable(createWebMessageRequest.getSender()).orElse(Sender.create()).getUserId());
 	}
 
 	public static WebMessage toWebMessage(final WebMessageEntity webMessageEntity) {
@@ -47,7 +49,10 @@ public final class WebMessageMapper {
 			.withId(webMessageEntity.getId())
 			.withMessage(webMessageEntity.getMessage())
 			.withMunicipalityId(webMessageEntity.getMunicipalityId())
-			.withPartyId(webMessageEntity.getPartyId());
+			.withPartyId(webMessageEntity.getPartyId())
+			.withSender(Optional.ofNullable(webMessageEntity.getSenderUserId())
+				.map(userId -> Sender.create().withUserId(userId))
+				.orElse(null));
 	}
 
 	public static List<WebMessage> toWebMessages(final List<WebMessageEntity> webMessageEntities) {
