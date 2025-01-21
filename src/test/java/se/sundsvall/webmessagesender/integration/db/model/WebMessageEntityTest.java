@@ -7,13 +7,13 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToStringExcl
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSettersExcluding;
 import static com.google.code.beanmatchers.BeanMatchers.registerValueGenerator;
 import static java.time.OffsetDateTime.now;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -46,6 +46,7 @@ class WebMessageEntityTest {
 		final var message = "message";
 		final var municipalityId = "municipalityId";
 		final var partyId = UUID.randomUUID().toString();
+		final var senderUserId = "senderUserId";
 		final var oepMessageId = Integer.MAX_VALUE;
 		final var attachments = List.of(AttachmentEntity.create());
 		final var oepInstance = "internal";
@@ -58,6 +59,7 @@ class WebMessageEntityTest {
 			.withMessage(message)
 			.withMunicipalityId(municipalityId)
 			.withPartyId(partyId)
+			.withSenderUserId(senderUserId)
 			.withOepMessageId(oepMessageId)
 			.withAttachments(attachments);
 
@@ -69,6 +71,7 @@ class WebMessageEntityTest {
 		assertThat(webMessage.getMessage()).isEqualTo(message);
 		assertThat(webMessage.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(webMessage.getPartyId()).isEqualTo(partyId);
+		assertThat(webMessage.getSenderUserId()).isEqualTo(senderUserId);
 		assertThat(webMessage.getOepMessageId()).isEqualTo(oepMessageId);
 		assertThat(webMessage.getAttachments()).isSameAs(attachments);
 	}
@@ -77,7 +80,7 @@ class WebMessageEntityTest {
 	void testPrePersist() {
 		final var webMessage = WebMessageEntity.create();
 		webMessage.prePersist();
-		assertThat(webMessage.getCreated()).isCloseTo(OffsetDateTime.now(), within(2, ChronoUnit.SECONDS));
+		assertThat(webMessage.getCreated()).isCloseTo(OffsetDateTime.now(), within(2, SECONDS));
 	}
 
 	@Test

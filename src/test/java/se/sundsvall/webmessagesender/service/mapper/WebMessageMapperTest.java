@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import se.sundsvall.webmessagesender.api.model.Attachment;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
+import se.sundsvall.webmessagesender.api.model.Sender;
 import se.sundsvall.webmessagesender.integration.db.model.AttachmentEntity;
 import se.sundsvall.webmessagesender.integration.db.model.ExternalReferenceEntity;
 import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
@@ -30,7 +31,8 @@ class WebMessageMapperTest {
 				ExternalReference.create().withKey("key-2").withValue("value-2"),
 				ExternalReference.create().withKey("key-3").withValue("value-3")))
 			.withMessage("A message")
-			.withPartyId(UUID.randomUUID().toString());
+			.withPartyId(UUID.randomUUID().toString())
+			.withSender(Sender.create().withUserId("senderUserId"));
 
 		// Call
 		final var webMessageEntity = WebMessageMapper.toWebMessageEntity(municipalityId, createWebMessageRequest, null);
@@ -42,6 +44,7 @@ class WebMessageMapperTest {
 		assertThat(webMessageEntity.getMessage()).isEqualTo(createWebMessageRequest.getMessage());
 		assertThat(webMessageEntity.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(webMessageEntity.getPartyId()).isEqualTo(createWebMessageRequest.getPartyId());
+		assertThat(webMessageEntity.getSenderUserId()).isEqualTo(createWebMessageRequest.getSender().getUserId());
 		assertThat(webMessageEntity.getOepMessageId()).isNull();
 	}
 
@@ -57,7 +60,8 @@ class WebMessageMapperTest {
 				ExternalReference.create().withKey("key-2").withValue("value-2"),
 				ExternalReference.create().withKey("key-3").withValue("value-3")))
 			.withMessage("A message")
-			.withPartyId(UUID.randomUUID().toString());
+			.withPartyId(UUID.randomUUID().toString())
+			.withSender(Sender.create().withUserId("senderUserId"));
 
 		// Call
 		final var webMessageEntity = WebMessageMapper.toWebMessageEntity(municipalityId, createWebMessageRequest, Integer.MAX_VALUE);
@@ -69,6 +73,7 @@ class WebMessageMapperTest {
 		assertThat(webMessageEntity.getMessage()).isEqualTo(createWebMessageRequest.getMessage());
 		assertThat(webMessageEntity.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(webMessageEntity.getPartyId()).isEqualTo(createWebMessageRequest.getPartyId());
+		assertThat(webMessageEntity.getSenderUserId()).isEqualTo(createWebMessageRequest.getSender().getUserId());
 		assertThat(webMessageEntity.getOepMessageId()).isEqualTo(Integer.MAX_VALUE);
 	}
 
@@ -89,7 +94,8 @@ class WebMessageMapperTest {
 				ExternalReference.create().withKey("key-2").withValue("value-2"),
 				ExternalReference.create().withKey("key-3").withValue("value-3")))
 			.withMessage("A message")
-			.withPartyId(UUID.randomUUID().toString());
+			.withPartyId(UUID.randomUUID().toString())
+			.withSender(Sender.create().withUserId("senderUserId"));
 
 		// Call
 		final var webMessageEntity = WebMessageMapper.toWebMessageEntity(municipalityId, createWebMessageRequest, Integer.MAX_VALUE);
@@ -107,6 +113,7 @@ class WebMessageMapperTest {
 		assertThat(webMessageEntity.getMessage()).isEqualTo(createWebMessageRequest.getMessage());
 		assertThat(webMessageEntity.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(webMessageEntity.getPartyId()).isEqualTo(createWebMessageRequest.getPartyId());
+		assertThat(webMessageEntity.getSenderUserId()).isEqualTo(createWebMessageRequest.getSender().getUserId());
 		assertThat(webMessageEntity.getOepMessageId()).isEqualTo(Integer.MAX_VALUE);
 	}
 
@@ -140,7 +147,8 @@ class WebMessageMapperTest {
 			.withId(UUID.randomUUID().toString())
 			.withMessage("A message")
 			.withMunicipalityId(municipalityId)
-			.withPartyId(UUID.randomUUID().toString());
+			.withPartyId(UUID.randomUUID().toString())
+			.withSenderUserId("senderUserId");
 
 		// Call toWebMessage
 		final var webMessage = WebMessageMapper.toWebMessage(webMessageEntity);
@@ -159,6 +167,7 @@ class WebMessageMapperTest {
 		assertThat(webMessage.getMessage()).isEqualTo(webMessageEntity.getMessage());
 		assertThat(webMessage.getMunicipalityId()).isEqualTo(webMessageEntity.getMunicipalityId());
 		assertThat(webMessage.getPartyId()).isEqualTo(webMessageEntity.getPartyId());
+		assertThat(webMessage.getSender().getUserId()).isEqualTo(webMessageEntity.getSenderUserId());
 
 		// Call toWebMessages (reusing same webMessageEntity used in test of method toWebMessage)for verification of list of
 		// messages
@@ -178,6 +187,7 @@ class WebMessageMapperTest {
 				assertThat(message.getMessage()).isEqualTo(webMessageEntity.getMessage());
 				assertThat(message.getMunicipalityId()).isEqualTo(webMessageEntity.getMunicipalityId());
 				assertThat(message.getPartyId()).isEqualTo(webMessageEntity.getPartyId());
+				assertThat(message.getSender().getUserId()).isEqualTo(webMessageEntity.getSenderUserId());
 			});
 	}
 

@@ -39,6 +39,9 @@ public class WebMessageEntity {
 	@Column(name = "party_id")
 	private String partyId;
 
+	@Column(name = "sender_user_id")
+	private String senderUserId;
+
 	@Column(name = "message", length = LONG32)
 	private String message;
 
@@ -98,6 +101,19 @@ public class WebMessageEntity {
 
 	public WebMessageEntity withPartyId(final String partyId) {
 		this.partyId = partyId;
+		return this;
+	}
+
+	public String getSenderUserId() {
+		return senderUserId;
+	}
+
+	public void setSenderUserId(String senderUserId) {
+		this.senderUserId = senderUserId;
+	}
+
+	public WebMessageEntity withSenderUserId(String senderUserId) {
+		this.senderUserId = senderUserId;
 		return this;
 	}
 
@@ -188,22 +204,28 @@ public class WebMessageEntity {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(attachments, created, externalReferences, id, message, municipalityId, oepInstance, oepMessageId, partyId);
+		return Objects.hash(attachments, created, externalReferences, id, message, municipalityId, oepInstance, oepMessageId, partyId, senderUserId);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) { return true; }
-		if (!(obj instanceof final WebMessageEntity other)) { return false; }
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		WebMessageEntity other = (WebMessageEntity) obj;
 		return Objects.equals(attachments, other.attachments) && Objects.equals(created, other.created) && Objects.equals(externalReferences, other.externalReferences) && Objects.equals(id, other.id) && Objects.equals(message, other.message) && Objects
-			.equals(municipalityId, other.municipalityId) && Objects.equals(oepInstance, other.oepInstance) && Objects.equals(oepMessageId, other.oepMessageId) && Objects.equals(partyId, other.partyId);
+			.equals(municipalityId, other.municipalityId) && Objects.equals(oepInstance, other.oepInstance) && Objects.equals(oepMessageId, other.oepMessageId) && Objects.equals(partyId, other.partyId) && Objects.equals(senderUserId, other.senderUserId);
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("WebMessageEntity [id=").append(id).append(", municipalityId=").append(municipalityId).append(", partyId=").append(partyId).append(", message=").append(message).append(", oepInstance=").append(oepInstance).append(", created=")
-			.append(created).append(", oepMessageId=").append(oepMessageId).append(", externalReferences=").append(externalReferences).append(", attachments=").append(attachments).append("]");
-		return builder.toString();
+		return "WebMessageEntity [id=" + id + ", municipalityId=" + municipalityId + ", partyId=" + partyId + ", senderUserId=" + senderUserId + ", message=" + message + ", oepInstance=" + oepInstance + ", created=" + created + ", oepMessageId="
+			+ oepMessageId + ", externalReferences=" + externalReferences + ", attachments=" + attachments + "]";
 	}
 }
