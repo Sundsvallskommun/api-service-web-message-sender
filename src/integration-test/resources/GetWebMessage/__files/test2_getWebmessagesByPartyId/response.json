@@ -1,6 +1,9 @@
 [
 	{
 		"municipalityId": "2281",
+		"sender": {
+			"userId": "user003"
+		},
 		"externalReferences": [
 			{
 				"value": "common-value",
@@ -15,6 +18,9 @@
 	},
 	{
 		"municipalityId": "2281",
+		"sender": {
+			"userId": "user005"
+		},
 		"externalReferences": [
 			{
 				"value": "common-value",

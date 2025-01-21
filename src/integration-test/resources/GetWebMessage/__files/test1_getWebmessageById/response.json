@@ -1,5 +1,8 @@
 {
 	"municipalityId": "2281",
+	"sender": {
+		"userId": "user001"
+	},
 	"externalReferences": [
 		{
 			"value": "value1",
