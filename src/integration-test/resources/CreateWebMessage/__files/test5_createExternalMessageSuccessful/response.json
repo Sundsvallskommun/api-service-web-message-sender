@@ -1,0 +1,15 @@
+{
+	"id": "${json-unit.any-string}",
+	"municipalityId": "2281",
+	"partyId": "81471222-5798-11e9-ae24-57fa13b361e1",
+	"message": "This is a message",
+	"oepInstance": "external",
+	"externalReferences": [
+		{
+			"key": "flowInstanceId",
+			"value": "356435"
+		}
+	],
+	"created": "${json-unit.any-string}",
+	"attachments": []
+}
