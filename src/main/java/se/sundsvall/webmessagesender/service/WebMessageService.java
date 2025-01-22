@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
+import se.sundsvall.webmessagesender.api.model.Sender;
 import se.sundsvall.webmessagesender.api.model.WebMessage;
 import se.sundsvall.webmessagesender.integration.db.WebMessageRepository;
 import se.sundsvall.webmessagesender.integration.oep.OepIntegration;
@@ -46,8 +47,12 @@ public class WebMessageService {
 	private Integer addOepMessage(CreateWebMessageRequest createWebMessageRequest) {
 		try {
 			final var flowInstanceid = retrieveFlowInstanceId(createWebMessageRequest);
+			final var userId = retrieveUserId(createWebMessageRequest);
+
 			if (flowInstanceid.isPresent()) {
-				return oepIntegration.addMessage(createWebMessageRequest.getOepInstance(), toAddMessage(createWebMessageRequest.getMessage(), flowInstanceid.get(), createWebMessageRequest.getAttachments()))
+				return oepIntegration.addMessage(
+					createWebMessageRequest.getOepInstance(),
+					toAddMessage(createWebMessageRequest.getMessage(), userId, flowInstanceid.get(), createWebMessageRequest.getAttachments()))
 					.getMessageID();
 			}
 			return null;
@@ -70,6 +75,12 @@ public class WebMessageService {
 			.map(ExternalReference::getValue)
 			.map(Integer::parseInt)
 			.findFirst();
+	}
+
+	private String retrieveUserId(CreateWebMessageRequest createWebMessageRequest) {
+		return Optional.ofNullable(createWebMessageRequest.getSender())
+			.map(Sender::getUserId)
+			.orElse(null);
 	}
 
 	public WebMessage getByMunicipalityIdAndId(final String municipalityId, final String id) {

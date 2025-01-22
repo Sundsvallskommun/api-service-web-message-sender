@@ -11,6 +11,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import se.sundsvall.webmessagesender.generatedsources.oep.AddMessage;
 import se.sundsvall.webmessagesender.generatedsources.oep.Attachment;
 import se.sundsvall.webmessagesender.generatedsources.oep.IntegrationMessage;
+import se.sundsvall.webmessagesender.generatedsources.oep.Principal;
 
 public final class OepMapper {
 
@@ -18,7 +19,7 @@ public final class OepMapper {
 
 	private OepMapper() {}
 
-	public static AddMessage toAddMessage(String message, int flowInstanceId, List<se.sundsvall.webmessagesender.api.model.Attachment> attachments) throws DatatypeConfigurationException {
+	public static AddMessage toAddMessage(String message, String userId, int flowInstanceId, List<se.sundsvall.webmessagesender.api.model.Attachment> attachments) throws DatatypeConfigurationException {
 		final IntegrationMessage integrationMessage = new IntegrationMessage()
 			.withAdded(newInstance().newXMLGregorianCalendar(new GregorianCalendar()))
 			.withAttachments(toAttachments(attachments))
@@ -26,7 +27,10 @@ public final class OepMapper {
 
 		return new AddMessage()
 			.withFlowInstanceID(flowInstanceId)
-			.withMessage(integrationMessage);
+			.withMessage(integrationMessage)
+			.withPrincipal(Optional.ofNullable(userId)
+				.map(value -> new Principal().withUserID(value))
+				.orElse(null));
 	}
 
 	private static List<Attachment> toAttachments(List<se.sundsvall.webmessagesender.api.model.Attachment> attachments) {

@@ -8,13 +8,28 @@
 		"method": "POST",
 		"bodyPatterns": [
 			{
-				"matchesXPath": "//flowInstanceID[text()=2154]"
+				"matchesXPath": {
+					"expression": "//flowInstanceID/text()",
+					"contains": "2154"
+				}
 			},
 			{
-				"matchesXPath": "//filename[text()='test.pdf']"
+				"matchesXPath": {
+					"expression": "//filename/text()",
+					"contains": "test.pdf"
+				}
 			},
 			{
-				"matchesXPath": "//size[text()=18163]"
+				"matchesXPath": {
+					"expression": "//size/text()",
+					"contains": "18163"
+				}
+			},
+			{
+				"matchesXPath": {
+					"expression": "//principal/userID/text()",
+					"contains": "userYYY"
+				}
 			}
 		],
 		"url": "/internal-oepMock"

@@ -204,7 +204,7 @@ class WebMessageServiceTest {
 
 		// Mock throw from static method and test
 		try (MockedStatic<OepMapper> mockMapper = mockStatic(OepMapper.class)) {
-			mockMapper.when(() -> toAddMessage(any(), anyInt(), any())).thenThrow(new DatatypeConfigurationException());
+			mockMapper.when(() -> toAddMessage(any(), any(), anyInt(), any())).thenThrow(new DatatypeConfigurationException());
 
 			// Call
 			final var problem = assertThrows(ThrowableProblem.class, () -> webMessageService.create(municipalityId, createWebMessageRequest));
