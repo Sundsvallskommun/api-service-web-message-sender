@@ -8,7 +8,10 @@
 		"method": "POST",
 		"bodyPatterns": [
 			{
-				"matchesXPath": "//flowInstanceID[text()=356436]"
+				"matchesXPath": {
+					"expression": "//flowInstanceID/text()",
+					"contains": "356436"
+				}
 			}
 		],
 		"url": "/external-oepMock"

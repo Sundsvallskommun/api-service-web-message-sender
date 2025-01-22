@@ -22,12 +22,14 @@ class OepmapperTest {
 		final var base64Data = new String(Base64.getEncoder().encode("base64Data".getBytes()));
 		final var message = "A message with å, ä and ö";
 		final var flowInstanceId = 1337;
+		final var userId = "joe01doe";
 		final var attachment = create().withBase64Data(base64Data).withFileName("fileName").withMimeType("mimeType");
-		final var addMessage = toAddMessage(message, flowInstanceId, List.of(attachment));
+		final var addMessage = toAddMessage(message, userId, flowInstanceId, List.of(attachment));
 		final var base64binary = MAPPER.convertValue(attachment.getBase64Data(), byte[].class);
 
 		assertThat(addMessage.getExternalID()).isNull();
-		assertThat(addMessage.getPrincipal()).isNull();
+		assertThat(addMessage.getPrincipal()).isNotNull();
+		assertThat(addMessage.getPrincipal().getUserID()).isEqualTo(userId);
 		assertThat(addMessage.getFlowInstanceID()).isEqualTo(flowInstanceId);
 		assertThat(addMessage.getMessage()).isNotNull();
 		assertThat(addMessage.getMessage().getAdded()).isNotNull();
