@@ -85,10 +85,9 @@ public class Attachment {
 
 	@Override
 	public String toString() {
-		final String sb = "Attachment{" + "fileName='" + fileName + '\''
+		return "Attachment{" + "fileName='" + fileName + '\''
 			+ ", base64Data='" + base64Data + '\''
 			+ ", mimeType='" + mimeType + '\''
 			+ '}';
-		return sb;
 	}
 }
