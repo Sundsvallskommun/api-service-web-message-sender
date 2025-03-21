@@ -18,7 +18,7 @@ public class Attachment {
 	@Schema(description = "mimeType of file", accessMode = READ_ONLY)
 	private String mimeType;
 
-	@Schema(description = "Base 64 encoded file, max size 10 MB", format = "base64")
+	@Schema(description = "Base 64 encoded file, max size 50 MB", format = "base64")
 	@ValidBase64
 	@ValidFileSize
 	private String base64Data;
@@ -31,11 +31,11 @@ public class Attachment {
 		return fileName;
 	}
 
-	public void setFileName(String fileName) {
+	public void setFileName(final String fileName) {
 		this.fileName = fileName;
 	}
 
-	public Attachment withFileName(String fileName) {
+	public Attachment withFileName(final String fileName) {
 		this.fileName = fileName;
 		return this;
 	}
@@ -44,11 +44,11 @@ public class Attachment {
 		return mimeType;
 	}
 
-	public void setMimeType(String mimeType) {
+	public void setMimeType(final String mimeType) {
 		this.mimeType = mimeType;
 	}
 
-	public Attachment withMimeType(String mimeType) {
+	public Attachment withMimeType(final String mimeType) {
 		this.mimeType = mimeType;
 		return this;
 	}
@@ -57,24 +57,24 @@ public class Attachment {
 		return base64Data;
 	}
 
-	public void setBase64Data(String base64Data) {
+	public void setBase64Data(final String base64Data) {
 		this.base64Data = base64Data;
 	}
 
-	public Attachment withBase64Data(String base64Data) {
+	public Attachment withBase64Data(final String base64Data) {
 		this.base64Data = base64Data;
 		return this;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		Attachment that = (Attachment) o;
+		final Attachment that = (Attachment) o;
 		return Objects.equals(fileName, that.fileName) && Objects.equals(base64Data, that.base64Data) && Objects.equals(mimeType, that.mimeType);
 	}
 
@@ -85,11 +85,9 @@ public class Attachment {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("Attachment{");
-		sb.append("fileName='").append(fileName).append('\'');
-		sb.append(", base64Data='").append(base64Data).append('\'');
-		sb.append(", mimeType='").append(mimeType).append('\'');
-		sb.append('}');
-		return sb.toString();
+		return "Attachment{" + "fileName='" + fileName + '\''
+			+ ", base64Data='" + base64Data + '\''
+			+ ", mimeType='" + mimeType + '\''
+			+ '}';
 	}
 }

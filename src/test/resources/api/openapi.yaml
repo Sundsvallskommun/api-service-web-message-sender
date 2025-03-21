@@ -1,32 +1,32 @@
 openapi: 3.0.1
 info:
   title: api-web-message-sender
-  contact: {}
+  contact: { }
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   version: "3.2"
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:8080
+    description: Generated server url
 tags:
-- name: WebMessages
-  description: Web messages
+  - name: WebMessages
+    description: Web messages
 paths:
   /{municipalityId}/webmessages:
     post:
       tags:
-      - WebMessages
+        - WebMessages
       summary: Create web message
       operationId: createWebMessage
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
       requestBody:
         content:
           application/json:
@@ -53,8 +53,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "502":
           description: Bad gateway
           content:
@@ -70,24 +70,24 @@ paths:
   /{municipalityId}/webmessages/{id}:
     get:
       tags:
-      - WebMessages
+        - WebMessages
       summary: Get web message by ID
       operationId: getWebMessageById
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: Web message ID
-        required: true
-        schema:
-          type: string
-        example: 81471222-5798-11e9-ae24-57fa13b361e1
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Web message ID
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
       responses:
         "200":
           description: Successful operation
@@ -107,8 +107,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "502":
           description: Bad gateway
           content:
@@ -123,24 +123,24 @@ paths:
                 $ref: "#/components/schemas/Problem"
     delete:
       tags:
-      - WebMessages
+        - WebMessages
       summary: Delete web message by ID
       operationId: deleteWebMessageById
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: Web message ID
-        required: true
-        schema:
-          type: string
-        example: 81471222-5798-11e9-ae24-57fa13b361e1
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Web message ID
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
       responses:
         "204":
           description: Successful operation
@@ -156,8 +156,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "502":
           description: Bad gateway
           content:
@@ -173,24 +173,24 @@ paths:
   /{municipalityId}/webmessages/recipients/{partyId}:
     get:
       tags:
-      - WebMessages
+        - WebMessages
       summary: Get web messages by partyId
       operationId: getWebMessagesByPartyId
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: partyId
-        in: path
-        description: PartyID
-        required: true
-        schema:
-          type: string
-        example: 81471222-5798-11e9-ae24-57fa13b361e1
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: partyId
+          in: path
+          description: PartyID
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
       responses:
         "200":
           description: Successful operation
@@ -212,8 +212,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "502":
           description: Bad gateway
           content:
@@ -229,35 +229,35 @@ paths:
   /{municipalityId}/webmessages/external-references/{key}/{value}:
     get:
       tags:
-      - WebMessages
+        - WebMessages
       summary: Get web messages by externalReference
       operationId: getWebMessagesByExternalReference
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: key
-        in: path
-        description: The external-reference key
-        required: true
-        schema:
-          maxLength: 128
-          minLength: 3
-          type: string
-        example: flowInstanceId
-      - name: value
-        in: path
-        description: The external-reference value
-        required: true
-        schema:
-          maxLength: 128
-          minLength: 3
-          type: string
-        example: 356t4r34f
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: key
+          in: path
+          description: The external-reference key
+          required: true
+          schema:
+            maxLength: 128
+            minLength: 3
+            type: string
+          example: flowInstanceId
+        - name: value
+          in: path
+          description: The external-reference value
+          required: true
+          schema:
+            maxLength: 128
+            minLength: 3
+            type: string
+          example: 356t4r34f
       responses:
         "200":
           description: Successful operation
@@ -279,8 +279,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "502":
           description: Bad gateway
           content:
@@ -296,7 +296,7 @@ paths:
   /api-docs:
     get:
       tags:
-      - API
+        - API
       summary: OpenAPI
       operationId: getApiDocs
       responses:
@@ -313,7 +313,7 @@ components:
   schemas:
     Attachment:
       required:
-      - fileName
+        - fileName
       type: object
       properties:
         fileName:
@@ -325,7 +325,7 @@ components:
           readOnly: true
         base64Data:
           type: string
-          description: "Base 64 encoded file, max size 10 MB"
+          description: "Base 64 encoded file, max size 50 MB"
           format: base64
       description: File attachment
     CreateWebMessageRequest:
@@ -347,8 +347,8 @@ components:
             external OeP instance
           example: internal
           enum:
-          - internal
-          - external
+            - internal
+            - external
         externalReferences:
           type: array
           items:
@@ -612,4 +612,4 @@ components:
             $ref: "#/components/schemas/Attachment"
       description: WebMessage model
       readOnly: true
-  securitySchemes: {}
+  securitySchemes: { }
