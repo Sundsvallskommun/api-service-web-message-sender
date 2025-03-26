@@ -8,7 +8,7 @@ logbook:
       - key: '$.attachments[*].base64Data'
         value: '[base64]'
     x-path:
-      - key: '//encodedData[string-length(text()) > 0]'
+      - key: '//encodedData'
         value: '[base64]'
   logs:
     maxBodySizeToLog: 10000
