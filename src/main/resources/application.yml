@@ -4,12 +4,15 @@ integration:
     readTimeout: 30
 logbook:
   body-filters:
-    json-path: 
+    json-path:
       - key: '$.attachments[*].base64Data'
         value: '[base64]'
     x-path:
       - key: '//encodedData[string-length(text()) > 0]'
         value: '[base64]'
+  logs:
+    maxBodySizeToLog: 10000
+
 logging:
   level:
     root: INFO
