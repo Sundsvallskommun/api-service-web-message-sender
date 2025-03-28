@@ -63,7 +63,7 @@ class WebMessageResource {
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Valid @RequestBody final CreateWebMessageRequest request) {
 
-		return created(fromPath("/{municipalityId}/webmessages/{id}").buildAndExpand(municipalityId, webMessageService.create(municipalityId, request).getId()).toUri())
+		return created(fromPath("/{municipalityId}/webmessages/{id}").buildAndExpand(municipalityId, webMessageService.create(municipalityId, request)).toUri())
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}
@@ -74,7 +74,7 @@ class WebMessageResource {
 	})
 	ResponseEntity<WebMessage> getWebMessageById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "id", description = "Web message ID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid @PathVariable(name = "id", required = true) String id) {
+		@Parameter(name = "id", description = "Web message ID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid @PathVariable(name = "id", required = true) final String id) {
 
 		return ok(webMessageService.getByMunicipalityIdAndId(municipalityId, id));
 	}
@@ -85,7 +85,7 @@ class WebMessageResource {
 	})
 	ResponseEntity<List<WebMessage>> getWebMessagesByPartyId(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "partyId", description = "PartyID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "partyId", required = true) @ValidUuid String partyId) {
+		@Parameter(name = "partyId", description = "PartyID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "partyId", required = true) @ValidUuid final String partyId) {
 
 		return ok(webMessageService.getByMunicipalityIdAndPartyId(municipalityId, partyId));
 	}
@@ -96,8 +96,8 @@ class WebMessageResource {
 	})
 	ResponseEntity<List<WebMessage>> getWebMessagesByExternalReference(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "key", description = "The external-reference key", example = "flowInstanceId") @PathVariable(value = "key", required = true) @Size(min = 3, max = 128) String key,
-		@Parameter(name = "value", description = "The external-reference value", example = "356t4r34f") @PathVariable(value = "value", required = true) @Size(min = 3, max = 128) String value) {
+		@Parameter(name = "key", description = "The external-reference key", example = "flowInstanceId") @PathVariable(value = "key", required = true) @Size(min = 3, max = 128) final String key,
+		@Parameter(name = "value", description = "The external-reference value", example = "356t4r34f") @PathVariable(value = "value", required = true) @Size(min = 3, max = 128) final String value) {
 
 		return ok(webMessageService.getByMunicipalityIdAndExternalReference(municipalityId, key, value));
 	}
@@ -108,7 +108,7 @@ class WebMessageResource {
 	})
 	ResponseEntity<Void> deleteWebMessageById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "id", description = "Web message ID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid @PathVariable String id) {
+		@Parameter(name = "id", description = "Web message ID", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid @PathVariable final String id) {
 
 		webMessageService.deleteByMunicipalityIdAndId(municipalityId, id);
 

@@ -94,7 +94,7 @@ class WebMessageServiceTest {
 			.withPartyId(randomUUID().toString());
 
 		// Mock
-		final var webMessageEntity = toWebMessageEntity(municipalityId, createWebMessageRequest, null);
+		final var webMessageEntity = toWebMessageEntity(municipalityId, createWebMessageRequest, null).withId("123");
 		when(webMessageRepository.save(any())).thenReturn(webMessageEntity);
 
 		// Call
@@ -103,7 +103,12 @@ class WebMessageServiceTest {
 		assertThat(result).isNotNull();
 
 		// Verification
-		verify(webMessageRepository).save(webMessageEntity);
+		verify(webMessageRepository).save(webMessageEntityCaptor.capture());
+
+		assertThat(webMessageEntityCaptor.getValue().getCreated()).isNull();
+		assertThat(webMessageEntityCaptor.getValue().getMessage()).isEqualTo(createWebMessageRequest.getMessage());
+		assertThat(webMessageEntityCaptor.getValue().getOepMessageId()).isNull();
+		assertThat(webMessageEntityCaptor.getValue().getPartyId()).isEqualTo(createWebMessageRequest.getPartyId());
 		verifyNoMoreInteractions(webMessageRepository);
 	}
 
@@ -111,7 +116,7 @@ class WebMessageServiceTest {
 	@ValueSource(strings = {
 		"flowInstanceId", "flowinstanceid", "FLOWINSTANCEID"
 	})
-	void createWithFlowInstanceId(String key) {
+	void createWithFlowInstanceId(final String key) {
 
 		// Setup
 		final var value = "123456";
@@ -126,7 +131,7 @@ class WebMessageServiceTest {
 			.withMessage(message)
 			.withPartyId(partyId);
 
-		final var webMessageEntity = toWebMessageEntity(municipalityId, createWebMessageRequest, oepMessageId);
+		final var webMessageEntity = toWebMessageEntity(municipalityId, createWebMessageRequest, oepMessageId).withId("123");
 
 		// Mock
 		when(oepIntegration.addMessage(eq("internal"), any(AddMessage.class))).thenReturn(addMessageResponse);
@@ -203,7 +208,7 @@ class WebMessageServiceTest {
 			.withPartyId(randomUUID().toString());
 
 		// Mock throw from static method and test
-		try (MockedStatic<OepMapper> mockMapper = mockStatic(OepMapper.class)) {
+		try (final MockedStatic<OepMapper> mockMapper = mockStatic(OepMapper.class)) {
 			mockMapper.when(() -> toAddMessage(any(), any(), anyInt(), any())).thenThrow(new DatatypeConfigurationException());
 
 			// Call

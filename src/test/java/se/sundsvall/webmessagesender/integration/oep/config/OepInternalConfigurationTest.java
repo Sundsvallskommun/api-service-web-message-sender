@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.soap.SOAPDecoder;
-import feign.soap.SOAPEncoder;
 import feign.soap.SOAPErrorDecoder;
 import java.util.Base64;
 import org.junit.jupiter.api.Test;
@@ -22,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 import se.sundsvall.webmessagesender.Application;
+import se.sundsvall.webmessagesender.integration.oep.config.encoder.SOAPJAXBEncoder;
 
 @SpringBootTest(classes = {
 	Application.class
@@ -55,7 +55,7 @@ class OepInternalConfigurationTest {
 		when(propertiesMock.username()).thenReturn(username);
 
 		// Mock static FeignMultiCustomizer to enable spy and to verify that static method is being called
-		try (MockedStatic<FeignMultiCustomizer> feignMultiCustomizerMock = Mockito.mockStatic(FeignMultiCustomizer.class)) {
+		try (final MockedStatic<FeignMultiCustomizer> feignMultiCustomizerMock = Mockito.mockStatic(FeignMultiCustomizer.class)) {
 			feignMultiCustomizerMock.when(FeignMultiCustomizer::create).thenReturn(feignMultiCustomizerSpy);
 
 			configuration.internalFeignBuilderCustomizer(propertiesMock);
@@ -69,7 +69,7 @@ class OepInternalConfigurationTest {
 		verify(propertiesMock).internalPassword();
 		verify(propertiesMock).username();
 		verify(feignMultiCustomizerSpy).withDecoder(any(SOAPDecoder.class));
-		verify(feignMultiCustomizerSpy).withEncoder(any(SOAPEncoder.class));
+		verify(feignMultiCustomizerSpy).withEncoder(any(SOAPJAXBEncoder.class));
 		verify(feignMultiCustomizerSpy).withErrorDecoder(any(SOAPErrorDecoder.class));
 		verify(feignMultiCustomizerSpy).withRequestInterceptor(basicAuthRequestInterceptorCaptor.capture());
 		verify(feignMultiCustomizerSpy).withRequestTimeoutsInSeconds(connectTimeout, readTimeout);
@@ -79,7 +79,7 @@ class OepInternalConfigurationTest {
 		assertThat(basicAuthRequestInterceptorCaptor.getValue()).hasFieldOrPropertyWithValue("headerValue", "Basic " + base64Encode((username + ":" + password)));
 	}
 
-	private String base64Encode(String string) {
+	private String base64Encode(final String string) {
 		return new String(Base64.getEncoder().encode(string.getBytes()));
 	}
 }

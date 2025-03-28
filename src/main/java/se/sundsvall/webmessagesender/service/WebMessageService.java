@@ -1,6 +1,7 @@
 package se.sundsvall.webmessagesender.service;
 
 import static java.lang.String.format;
+import static org.zalando.problem.Status.BAD_REQUEST;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.webmessagesender.integration.oep.mapper.OepSoapFaultMapper.convertToThrowableProblem;
@@ -34,17 +35,21 @@ public class WebMessageService {
 	private final WebMessageRepository webMessageRepository;
 	private final OepIntegration oepIntegration;
 
-	public WebMessageService(WebMessageRepository webMessageRepository, OepIntegration oepIntegration) {
+	public WebMessageService(final WebMessageRepository webMessageRepository, final OepIntegration oepIntegration) {
 		this.webMessageRepository = webMessageRepository;
 		this.oepIntegration = oepIntegration;
 	}
 
-	public WebMessage create(final String municipalityId, final CreateWebMessageRequest createWebMessageRequest) {
+	public String create(final String municipalityId, final CreateWebMessageRequest createWebMessageRequest) {
 		final var oepMessageId = addOepMessage(createWebMessageRequest);
-		return toWebMessage(webMessageRepository.save(toWebMessageEntity(municipalityId, createWebMessageRequest, oepMessageId)));
+
+		final var entity = Optional.ofNullable(toWebMessageEntity(municipalityId, createWebMessageRequest, oepMessageId))
+			.orElseThrow(() -> Problem.valueOf(BAD_REQUEST, "Request was null"));
+
+		return webMessageRepository.save(entity).getId();
 	}
 
-	private Integer addOepMessage(CreateWebMessageRequest createWebMessageRequest) {
+	private Integer addOepMessage(final CreateWebMessageRequest createWebMessageRequest) {
 		try {
 			final var flowInstanceid = retrieveFlowInstanceId(createWebMessageRequest);
 			final var userId = retrieveUserId(createWebMessageRequest);
@@ -69,7 +74,7 @@ public class WebMessageService {
 		}
 	}
 
-	private Optional<Integer> retrieveFlowInstanceId(CreateWebMessageRequest createWebMessageRequest) {
+	private Optional<Integer> retrieveFlowInstanceId(final CreateWebMessageRequest createWebMessageRequest) {
 		return createWebMessageRequest.getExternalReferences().stream()
 			.filter(reference -> REFERENCE_FLOW_INSTANCE_ID.equalsIgnoreCase(reference.getKey()))
 			.map(ExternalReference::getValue)
@@ -77,7 +82,7 @@ public class WebMessageService {
 			.findFirst();
 	}
 
-	private String retrieveUserId(CreateWebMessageRequest createWebMessageRequest) {
+	private String retrieveUserId(final CreateWebMessageRequest createWebMessageRequest) {
 		return Optional.ofNullable(createWebMessageRequest.getSender())
 			.map(Sender::getUserId)
 			.orElse(null);

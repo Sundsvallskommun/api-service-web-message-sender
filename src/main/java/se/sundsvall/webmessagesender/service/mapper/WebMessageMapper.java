@@ -2,10 +2,10 @@ package se.sundsvall.webmessagesender.service.mapper;
 
 import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
-import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static se.sundsvall.webmessagesender.service.mapper.MimeTypeUtility.detectMimeType;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +19,7 @@ import se.sundsvall.webmessagesender.integration.db.model.ExternalReferenceEntit
 import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
 
 public final class WebMessageMapper {
+	private static final ObjectMapper MAPPER = new ObjectMapper();
 
 	private WebMessageMapper() {}
 
@@ -61,14 +62,14 @@ public final class WebMessageMapper {
 			.toList();
 	}
 
-	private static List<AttachmentEntity> toAttachmentEntities(List<Attachment> attachments) {
+	private static List<AttachmentEntity> toAttachmentEntities(final List<Attachment> attachments) {
 		return Optional.ofNullable(attachments).orElse(emptyList()).stream()
 			.map(WebMessageMapper::toAttachmentEntity)
 			.toList();
 	}
 
-	private static AttachmentEntity toAttachmentEntity(Attachment attachment) {
-		final byte[] byteArray = decodeBase64(attachment.getBase64Data());
+	private static AttachmentEntity toAttachmentEntity(final Attachment attachment) {
+		final byte[] byteArray = MAPPER.convertValue(attachment.getBase64Data(), byte[].class);
 
 		return AttachmentEntity.create()
 			.withFile(byteArray)
@@ -76,39 +77,39 @@ public final class WebMessageMapper {
 			.withMimeType(detectMimeType(attachment.getFileName(), byteArray));
 	}
 
-	private static List<ExternalReferenceEntity> toExternalReferenceEntities(List<ExternalReference> externalReferences) {
+	private static List<ExternalReferenceEntity> toExternalReferenceEntities(final List<ExternalReference> externalReferences) {
 		return Optional.ofNullable(externalReferences).orElse(emptyList()).stream()
 			.distinct() // Remove duplicates
 			.map(WebMessageMapper::toExternalReferenceEntity)
 			.toList();
 	}
 
-	private static ExternalReferenceEntity toExternalReferenceEntity(ExternalReference externalReference) {
+	private static ExternalReferenceEntity toExternalReferenceEntity(final ExternalReference externalReference) {
 		return ExternalReferenceEntity.create()
 			.withKey(externalReference.getKey())
 			.withValue(externalReference.getValue());
 	}
 
-	private static List<Attachment> toAttachments(List<AttachmentEntity> attachmentEntities) {
+	private static List<Attachment> toAttachments(final List<AttachmentEntity> attachmentEntities) {
 		return Optional.ofNullable(attachmentEntities).orElse(emptyList()).stream()
 			.map(WebMessageMapper::toAttachment)
 			.toList();
 	}
 
-	private static Attachment toAttachment(AttachmentEntity attachmentEntity) {
+	private static Attachment toAttachment(final AttachmentEntity attachmentEntity) {
 		return Attachment.create()
 			.withBase64Data(new String(encodeBase64(attachmentEntity.getFile()), StandardCharsets.UTF_8))
 			.withFileName(attachmentEntity.getFileName())
 			.withMimeType(attachmentEntity.getMimeType());
 	}
 
-	private static List<ExternalReference> toExternalReferences(List<ExternalReferenceEntity> externalReferenceEntities) {
+	private static List<ExternalReference> toExternalReferences(final List<ExternalReferenceEntity> externalReferenceEntities) {
 		return Optional.ofNullable(externalReferenceEntities).orElse(emptyList()).stream()
 			.map(WebMessageMapper::toExternalReference)
 			.toList();
 	}
 
-	private static ExternalReference toExternalReference(ExternalReferenceEntity externalReferenceEntity) {
+	private static ExternalReference toExternalReference(final ExternalReferenceEntity externalReferenceEntity) {
 		return ExternalReference.create()
 			.withKey(externalReferenceEntity.getKey())
 			.withValue(externalReferenceEntity.getValue());
