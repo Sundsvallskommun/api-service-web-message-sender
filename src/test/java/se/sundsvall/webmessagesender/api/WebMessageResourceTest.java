@@ -38,7 +38,7 @@ class WebMessageResourceTest {
 
 		// Mock
 		final var id = UUID.randomUUID().toString();
-		when(webMessageService.create(any(), any())).thenReturn(WebMessage.create().withId(id));
+		when(webMessageService.create(any(), any())).thenReturn(id);
 
 		// Parameter values
 		final var municipalityId = "2281";
@@ -76,7 +76,7 @@ class WebMessageResourceTest {
 
 		// Mock
 		final var id = UUID.randomUUID().toString();
-		when(webMessageService.create(any(), any())).thenReturn(WebMessage.create().withId(id));
+		when(webMessageService.create(any(), any())).thenReturn(id);
 
 		webTestClient.post()
 			.uri(builder -> builder.path("/{municipalityId}/webmessages").build(Map.of("municipalityId", municipalityId)))
