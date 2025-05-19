@@ -312,6 +312,8 @@ paths:
 components:
   schemas:
     Attachment:
+      required:
+      - fileName
       type: object
       properties:
         fileName:
@@ -381,6 +383,8 @@ components:
     Problem:
       type: object
       properties:
+        status:
+          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri
@@ -391,8 +395,6 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
         detail:
           type: string
         title:
@@ -516,6 +518,8 @@ components:
                 type: boolean
         message:
           type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri
@@ -526,8 +530,6 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
         detail:
           type: string
         title:
