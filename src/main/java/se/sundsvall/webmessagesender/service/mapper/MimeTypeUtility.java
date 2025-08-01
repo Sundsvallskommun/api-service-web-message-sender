@@ -1,11 +1,13 @@
 package se.sundsvall.webmessagesender.service.mapper;
 
+import static org.springframework.util.MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import org.overviewproject.mime_types.MimeTypeDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.MimeTypeUtils;
 
 public final class MimeTypeUtility {
 
@@ -18,8 +20,8 @@ public final class MimeTypeUtility {
 		try (InputStream stream = new ByteArrayInputStream(byteArray)) {
 			return DETECTOR.detectMimeType(fileName, stream);
 		} catch (final Exception e) {
-			LOGGER.error(String.format("Exception when detecting mime type of file with filename '%s'", fileName), e);
-			return MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE; // Return mime type for arbitrary binary files
+			LOGGER.error(String.format("Exception when detecting mime type of file with filename '%s'", sanitizeForLogging(fileName)), e);
+			return APPLICATION_OCTET_STREAM_VALUE; // Return mime type for arbitrary binary files
 		}
 	}
 }
