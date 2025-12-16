@@ -1,0 +1,24 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Basic b2VwLnVzZXJuYW1lOm9lcC5jbGllbnQuaW50ZXJuYWwucGFzc3dvcmQ="
+			}
+		},
+		"method": "POST",
+		"bodyPatterns": [
+			{
+				"matchesXPath": {
+					"expression": "//flowInstanceID/text()",
+					"contains": "356435"
+				}
+			}
+		],
+		"url": "/internal-oepMock"
+	},
+	"response": {
+		"bodyFileName": "test7_accessDenied/response/addMessageResponse.xml",
+		"status": 500
+	},
+	"name": "internal-oep"
+}

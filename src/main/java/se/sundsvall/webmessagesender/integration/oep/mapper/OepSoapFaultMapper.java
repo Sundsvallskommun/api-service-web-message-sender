@@ -6,10 +6,8 @@ import static org.zalando.problem.Status.NOT_FOUND;
 import static org.zalando.problem.Status.UNAUTHORIZED;
 
 import jakarta.xml.ws.soap.SOAPFaultException;
-
 import org.zalando.problem.Problem;
 import org.zalando.problem.ThrowableProblem;
-
 import se.sundsvall.dept44.exception.ClientProblem;
 import se.sundsvall.dept44.exception.ServerProblem;
 
@@ -26,6 +24,8 @@ public final class OepSoapFaultMapper {
 	 * {@code
 	 *
 	 *
+	 * 
+	 * 
 	 * <pre>
 	 * 		<S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope">
 	 * 			<faultcode>S:Server</faultcode>
@@ -35,7 +35,9 @@ public final class OepSoapFaultMapper {
 	 * 			</detail>
 	 * 		</S:Fault>
 	 * 	</pre>
-	 * <p>
+	
+	 * 
+	<p>
 	 * }
 	 * which the method interprets and converts to a throwable problem. If detail contains a child with one of the known
 	 * faults
@@ -43,8 +45,8 @@ public final class OepSoapFaultMapper {
 	 * cases
 	 * a throwable problem with internal server error as status code will be returned.
 	 *
-	 * @param soapFaultException to be interpreted and converted to a throwable problem
-	 * @return a throwable problem representation of the SOAPFaultException
+	 * @param  soapFaultException to be interpreted and converted to a throwable problem
+	 * @return                    a throwable problem representation of the SOAPFaultException
 	 */
 	public static ThrowableProblem convertToThrowableProblem(SOAPFaultException soapFaultException) {
 		final var wrapper = new Object() {
@@ -57,10 +59,8 @@ public final class OepSoapFaultMapper {
 			.getDetailEntries()
 			.forEachRemaining(entry -> {
 				final ThrowableProblem throwableProblem = switch (entry.getLocalName()) {
-					case ACCESS_DENIED_FAULT ->
-						new ServerProblem(UNAUTHORIZED, soapFaultException.getFault().getFaultString());
-					case FLOW_INSTANCE_NOT_FOUND_FAULT ->
-						new ClientProblem(NOT_FOUND, soapFaultException.getFault().getFaultString());
+					case ACCESS_DENIED_FAULT -> new ServerProblem(UNAUTHORIZED, soapFaultException.getFault().getFaultString());
+					case FLOW_INSTANCE_NOT_FOUND_FAULT -> new ClientProblem(NOT_FOUND, soapFaultException.getFault().getFaultString());
 					default -> null;
 				};
 				if (nonNull(throwableProblem)) {

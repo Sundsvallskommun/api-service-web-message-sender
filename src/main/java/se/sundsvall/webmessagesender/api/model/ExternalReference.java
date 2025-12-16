@@ -6,10 +6,10 @@ import java.util.Objects;
 @Schema(description = "ExternalReference model")
 public class ExternalReference {
 
-	@Schema(description = "The external reference key", example = "flowInstanceId")
+	@Schema(description = "The external reference key", examples = "flowInstanceId")
 	private String key;
 
-	@Schema(description = "The external reference value", example = "356746349")
+	@Schema(description = "The external reference value", examples = "356746349")
 	private String value;
 
 	public static ExternalReference create() {
@@ -49,12 +49,15 @@ public class ExternalReference {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ExternalReference other = (ExternalReference) obj;
 		return Objects.equals(key, other.key) && Objects.equals(value, other.value);
 	}

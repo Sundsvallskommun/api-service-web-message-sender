@@ -14,19 +14,19 @@ import se.sundsvall.webmessagesender.api.validation.ValidInstance;
 @Schema(description = "CreateWebMessageRequest model")
 public class CreateWebMessageRequest {
 
-	@Schema(description = "Party ID (e.g. a personId or an organizationId)", example = "81471222-5798-11e9-ae24-57fa13b361e1", requiredMode = NOT_REQUIRED)
+	@Schema(description = "Party ID (e.g. a personId or an organizationId)", examples = "81471222-5798-11e9-ae24-57fa13b361e1", requiredMode = NOT_REQUIRED)
 	@ValidUuid(nullable = true)
 	private String partyId;
 
 	@Schema(description = "The sender", requiredMode = NOT_REQUIRED)
 	private Sender sender;
 
-	@Schema(description = "The message", example = "This is a message")
+	@Schema(description = "The message", examples = "This is a message")
 	private String message;
 
 	@Schema(description = "Determines if the message should be added to the internal or external OeP instance", allowableValues = {
 		"internal", "external"
-	}, example = "internal")
+	}, examples = "internal")
 	@ValidInstance
 	private String oepInstance;
 

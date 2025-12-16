@@ -13,22 +13,22 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Schema(description = "WebMessage model", accessMode = READ_ONLY)
 public class WebMessage {
 
-	@Schema(description = "Web Message ID", example = "f0882f1d-06bc-47fd-b017-1d8307f5ce95")
+	@Schema(description = "Web Message ID", examples = "f0882f1d-06bc-47fd-b017-1d8307f5ce95")
 	private String id;
 
-	@Schema(description = "Municipality ID", example = "2281")
+	@Schema(description = "Municipality ID", examples = "2281")
 	private String municipalityId;
 
 	@Schema(description = "The sender")
 	private Sender sender;
 
-	@Schema(description = "Party ID (e.g. a personId or an organizationId)", example = "81471222-5798-11e9-ae24-57fa13b361e1")
+	@Schema(description = "Party ID (e.g. a personId or an organizationId)", examples = "81471222-5798-11e9-ae24-57fa13b361e1")
 	private String partyId;
 
-	@Schema(description = "The message", example = "This is a message")
+	@Schema(description = "The message", examples = "This is a message")
 	private String message;
 
-	@Schema(description = "The oep instance", example = "internal")
+	@Schema(description = "The oep instance", examples = "internal")
 	private String oepInstance;
 
 	@ArraySchema(schema = @Schema(implementation = ExternalReference.class))
