@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.1.0
 info:
   title: api-web-message-sender
   contact: {}
@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "3.2"
 servers:
-- url: http://localhost:8080
+- url: http://localhost:65209
   description: Generated server url
 tags:
 - name: WebMessages
@@ -245,18 +245,18 @@ paths:
         description: The external-reference key
         required: true
         schema:
+          type: string
           maxLength: 128
           minLength: 3
-          type: string
         example: flowInstanceId
       - name: value
         in: path
         description: The external-reference value
         required: true
         schema:
+          type: string
           maxLength: 128
           minLength: 3
-          type: string
         example: 356t4r34f
       responses:
         "200":
@@ -312,79 +312,85 @@ paths:
 components:
   schemas:
     Attachment:
-      required:
-      - fileName
       type: object
+      description: File attachment
       properties:
         fileName:
-          minLength: 1
           type: string
           description: Name of file
+          minLength: 1
         mimeType:
           type: string
           description: mimeType of file
           readOnly: true
         base64Data:
           type: string
-          description: "Base 64 encoded file, max size 50 MB"
           format: base64
-      description: File attachment
+          description: "Base 64 encoded file, max size 50 MB"
+      required:
+      - fileName
     CreateWebMessageRequest:
       type: object
+      description: CreateWebMessageRequest model
       properties:
         partyId:
           type: string
           description: Party ID (e.g. a personId or an organizationId)
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
+          examples:
+          - 81471222-5798-11e9-ae24-57fa13b361e1
         sender:
           $ref: "#/components/schemas/Sender"
+          description: The sender
         message:
           type: string
           description: The message
-          example: This is a message
+          examples:
+          - This is a message
         oepInstance:
           type: string
           description: Determines if the message should be added to the internal or
             external OeP instance
-          example: internal
           enum:
           - internal
           - external
+          examples:
+          - internal
         externalReferences:
           type: array
           items:
             $ref: "#/components/schemas/ExternalReference"
         attachments:
-          maxItems: 10
           type: array
           items:
             $ref: "#/components/schemas/Attachment"
-      description: CreateWebMessageRequest model
+            maxItems: 10
+          maxItems: 10
     ExternalReference:
       type: object
+      description: ExternalReference model
       properties:
         key:
           type: string
           description: The external reference key
-          example: flowInstanceId
+          examples:
+          - flowInstanceId
         value:
           type: string
           description: The external reference value
-          example: "356746349"
-      description: ExternalReference model
+          examples:
+          - "356746349"
     Sender:
       type: object
+      description: Sender model
       properties:
         userId:
           type: string
           description: The user ID of the sender. I.e. employee ID
-          example: joe01doe
-      description: Sender model
+          examples:
+          - joe01doe
     Problem:
       type: object
       properties:
-        status:
-          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri
@@ -393,8 +399,9 @@ components:
           format: uri
         parameters:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: {}
+        status:
+          $ref: "#/components/schemas/StatusType"
         detail:
           type: string
         title:
@@ -452,8 +459,7 @@ components:
           format: uri
         parameters:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: {}
         detail:
           type: string
         suppressed:
@@ -492,8 +498,7 @@ components:
     ThrowableProblem:
       type: object
       properties:
-        cause:
-          $ref: "#/components/schemas/ThrowableProblem"
+        cause: {}
         stackTrace:
           type: array
           items:
@@ -518,8 +523,6 @@ components:
                 type: boolean
         message:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri
@@ -528,8 +531,9 @@ components:
           format: uri
         parameters:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: {}
+        status:
+          $ref: "#/components/schemas/StatusType"
         detail:
           type: string
         title:
@@ -576,41 +580,47 @@ components:
           type: string
     WebMessage:
       type: object
+      description: WebMessage model
       properties:
         id:
           type: string
           description: Web Message ID
-          example: f0882f1d-06bc-47fd-b017-1d8307f5ce95
+          examples:
+          - f0882f1d-06bc-47fd-b017-1d8307f5ce95
         municipalityId:
           type: string
           description: Municipality ID
-          example: "2281"
+          examples:
+          - "2281"
         sender:
           $ref: "#/components/schemas/Sender"
+          description: The sender
         partyId:
           type: string
           description: Party ID (e.g. a personId or an organizationId)
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
+          examples:
+          - 81471222-5798-11e9-ae24-57fa13b361e1
         message:
           type: string
           description: The message
-          example: This is a message
+          examples:
+          - This is a message
         oepInstance:
           type: string
           description: The oep instance
-          example: internal
+          examples:
+          - internal
         externalReferences:
           type: array
           items:
             $ref: "#/components/schemas/ExternalReference"
         created:
           type: string
-          description: Created timestamp
           format: date-time
+          description: Created timestamp
         attachments:
           type: array
           items:
             $ref: "#/components/schemas/Attachment"
-      description: WebMessage model
       readOnly: true
   securitySchemes: {}

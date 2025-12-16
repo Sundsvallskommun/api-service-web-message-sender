@@ -1,11 +1,14 @@
 package openapi;
 
+import static java.nio.file.Files.writeString;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-
-import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+import net.javacrumbs.jsonunit.core.Option;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +17,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import se.sundsvall.dept44.util.ResourceUtils;
 import se.sundsvall.webmessagesender.Application;
-
-import net.javacrumbs.jsonunit.core.Option;
 
 @ActiveProfiles("it")
 @SpringBootTest(
@@ -45,14 +45,16 @@ class OpenApiSpecificationIT {
 	private TestRestTemplate restTemplate;
 
 	@Test
-	void compareOpenApiSpecifications() {
-		final String existingOpenApiSpecification = ResourceUtils.asString(openApiResource);
-		final String currentOpenApiSpecification = getCurrentOpenApiSpecification();
+	void compareOpenApiSpecifications() throws IOException {
+		final var existingOpenApiSpecification = ResourceUtils.asString(openApiResource);
+		final var currentOpenApiSpecification = getCurrentOpenApiSpecification();
 
-		assertThatJson(toJson(existingOpenApiSpecification))
+		writeString(Path.of("target/api.yaml"), currentOpenApiSpecification);
+
+		assertThatJson(toJson(currentOpenApiSpecification))
 			.withOptions(List.of(Option.IGNORING_ARRAY_ORDER))
 			.whenIgnoringPaths("servers")
-			.isEqualTo(toJson(currentOpenApiSpecification));
+			.isEqualTo(toJson(existingOpenApiSpecification));
 	}
 
 	/**
@@ -71,8 +73,8 @@ class OpenApiSpecificationIT {
 	/**
 	 * Attempts to convert the given YAML (no YAML-check...) to JSON.
 	 *
-	 * @param yaml the YAML to convert
-	 * @return a JSON string
+	 * @param  yaml the YAML to convert
+	 * @return      a JSON string
 	 */
 	private String toJson(final String yaml) {
 		try {

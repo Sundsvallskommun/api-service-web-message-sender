@@ -6,7 +6,7 @@ import java.util.Objects;
 @Schema(description = "Sender model")
 public class Sender {
 
-	@Schema(description = "The user ID of the sender. I.e. employee ID", example = "joe01doe")
+	@Schema(description = "The user ID of the sender. I.e. employee ID", examples = "joe01doe")
 	private String userId;
 
 	public static Sender create() {
