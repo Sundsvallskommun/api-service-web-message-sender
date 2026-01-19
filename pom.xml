@@ -14,7 +14,7 @@
 	<name>api-service-web-message-sender</name>
 	<description>Service for sending web messages to Open-E platform</description>
 	<properties>
-		<jaxb2-maven-plugin.version>4.0.0</jaxb2-maven-plugin.version>
+		<jaxb2-maven-plugin.version>4.1.0</jaxb2-maven-plugin.version>
 		<jaxb2-fluent-api.version>3.0</jaxb2-fluent-api.version>
 		<overviewproject.mimetypes.version>2.0.0</overviewproject.mimetypes.version>
 	</properties>
