@@ -1,7 +1,5 @@
 package se.sundsvall.webmessagesender.api.model;
 
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
-
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -10,6 +8,8 @@ import java.util.Objects;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 import se.sundsvall.webmessagesender.api.validation.ValidExternalReferences;
 import se.sundsvall.webmessagesender.api.validation.ValidInstance;
+
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 
 @Schema(description = "CreateWebMessageRequest model")
 public class CreateWebMessageRequest {

@@ -1,17 +1,5 @@
 package se.sundsvall.webmessagesender.service;
 
-import static java.lang.String.format;
-import static org.zalando.problem.Status.BAD_REQUEST;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.webmessagesender.integration.oep.mapper.OepSoapFaultMapper.convertToThrowableProblem;
-import static se.sundsvall.webmessagesender.service.ServiceConstants.ERROR_WEB_MESSAGE_NOT_FOUND;
-import static se.sundsvall.webmessagesender.service.ServiceConstants.REFERENCE_FLOW_INSTANCE_ID;
-import static se.sundsvall.webmessagesender.service.mapper.OepMapper.toAddMessage;
-import static se.sundsvall.webmessagesender.service.mapper.WebMessageMapper.toWebMessage;
-import static se.sundsvall.webmessagesender.service.mapper.WebMessageMapper.toWebMessageEntity;
-import static se.sundsvall.webmessagesender.service.mapper.WebMessageMapper.toWebMessages;
-
 import feign.codec.DecodeException;
 import jakarta.xml.ws.soap.SOAPFaultException;
 import java.util.List;
@@ -27,6 +15,18 @@ import se.sundsvall.webmessagesender.api.model.Sender;
 import se.sundsvall.webmessagesender.api.model.WebMessage;
 import se.sundsvall.webmessagesender.integration.db.WebMessageRepository;
 import se.sundsvall.webmessagesender.integration.oep.OepIntegration;
+
+import static java.lang.String.format;
+import static org.zalando.problem.Status.BAD_REQUEST;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.webmessagesender.integration.oep.mapper.OepSoapFaultMapper.convertToThrowableProblem;
+import static se.sundsvall.webmessagesender.service.ServiceConstants.ERROR_WEB_MESSAGE_NOT_FOUND;
+import static se.sundsvall.webmessagesender.service.ServiceConstants.REFERENCE_FLOW_INSTANCE_ID;
+import static se.sundsvall.webmessagesender.service.mapper.OepMapper.toAddMessage;
+import static se.sundsvall.webmessagesender.service.mapper.WebMessageMapper.toWebMessage;
+import static se.sundsvall.webmessagesender.service.mapper.WebMessageMapper.toWebMessageEntity;
+import static se.sundsvall.webmessagesender.service.mapper.WebMessageMapper.toWebMessages;
 
 @Service
 public class WebMessageService {

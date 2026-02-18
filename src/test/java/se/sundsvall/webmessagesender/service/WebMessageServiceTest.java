@@ -1,24 +1,5 @@
 package se.sundsvall.webmessagesender.service;
 
-import static java.lang.String.format;
-import static java.util.Optional.empty;
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
-import static org.assertj.core.api.AssertionsForClassTypes.tuple;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static se.sundsvall.webmessagesender.service.ServiceConstants.ERROR_WEB_MESSAGE_NOT_FOUND;
-import static se.sundsvall.webmessagesender.service.mapper.OepMapper.toAddMessage;
-import static se.sundsvall.webmessagesender.service.mapper.WebMessageMapper.toWebMessageEntity;
-
 import jakarta.xml.soap.Detail;
 import jakarta.xml.soap.SOAPFault;
 import jakarta.xml.ws.soap.SOAPFaultException;
@@ -49,6 +30,25 @@ import se.sundsvall.webmessagesender.integration.db.model.ExternalReferenceEntit
 import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
 import se.sundsvall.webmessagesender.integration.oep.OepIntegration;
 import se.sundsvall.webmessagesender.service.mapper.OepMapper;
+
+import static java.lang.String.format;
+import static java.util.Optional.empty;
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static se.sundsvall.webmessagesender.service.ServiceConstants.ERROR_WEB_MESSAGE_NOT_FOUND;
+import static se.sundsvall.webmessagesender.service.mapper.OepMapper.toAddMessage;
+import static se.sundsvall.webmessagesender.service.mapper.WebMessageMapper.toWebMessageEntity;
 
 @ExtendWith(MockitoExtension.class)
 class WebMessageServiceTest {

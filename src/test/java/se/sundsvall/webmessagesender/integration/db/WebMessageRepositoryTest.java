@@ -1,11 +1,5 @@
 package se.sundsvall.webmessagesender.integration.db;
 
-import static java.time.temporal.ChronoUnit.SECONDS;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +13,12 @@ import org.springframework.test.context.jdbc.Sql;
 import se.sundsvall.webmessagesender.integration.db.model.AttachmentEntity;
 import se.sundsvall.webmessagesender.integration.db.model.ExternalReferenceEntity;
 import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
+
+import static java.time.temporal.ChronoUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 /**
  * WebMessage repository tests.

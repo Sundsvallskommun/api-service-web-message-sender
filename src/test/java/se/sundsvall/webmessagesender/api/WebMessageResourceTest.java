@@ -1,12 +1,5 @@
 package se.sundsvall.webmessagesender.api;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.MediaType.ALL_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -22,6 +15,13 @@ import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.api.model.WebMessage;
 import se.sundsvall.webmessagesender.service.WebMessageService;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.ALL_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")

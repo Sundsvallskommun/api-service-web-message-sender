@@ -1,10 +1,10 @@
 package se.sundsvall.webmessagesender.integration.oep.client;
 
-import static se.sundsvall.webmessagesender.integration.oep.config.OepInternalConfiguration.OEP_INTERNAL_CLIENT;
-
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
 import se.sundsvall.webmessagesender.integration.oep.config.OepInternalConfiguration;
+
+import static se.sundsvall.webmessagesender.integration.oep.config.OepInternalConfiguration.OEP_INTERNAL_CLIENT;
 
 @FeignClient(
 	name = OEP_INTERNAL_CLIENT,

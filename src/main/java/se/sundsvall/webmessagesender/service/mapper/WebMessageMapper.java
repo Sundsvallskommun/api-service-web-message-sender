@@ -1,10 +1,5 @@
 package se.sundsvall.webmessagesender.service.mapper;
 
-import static java.util.Collections.emptyList;
-import static java.util.Objects.isNull;
-import static org.apache.commons.codec.binary.Base64.encodeBase64;
-import static se.sundsvall.webmessagesender.service.mapper.MimeTypeUtility.detectMimeType;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -17,6 +12,11 @@ import se.sundsvall.webmessagesender.api.model.WebMessage;
 import se.sundsvall.webmessagesender.integration.db.model.AttachmentEntity;
 import se.sundsvall.webmessagesender.integration.db.model.ExternalReferenceEntity;
 import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
+
+import static java.util.Collections.emptyList;
+import static java.util.Objects.isNull;
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
+import static se.sundsvall.webmessagesender.service.mapper.MimeTypeUtility.detectMimeType;
 
 public final class WebMessageMapper {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
