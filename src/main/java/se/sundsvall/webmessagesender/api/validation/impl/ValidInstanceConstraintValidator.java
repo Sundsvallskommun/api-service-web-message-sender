@@ -1,10 +1,10 @@
 package se.sundsvall.webmessagesender.api.validation.impl;
 
-import static java.util.Objects.isNull;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import se.sundsvall.webmessagesender.api.validation.ValidInstance;
+
+import static java.util.Objects.isNull;
 
 public class ValidInstanceConstraintValidator implements ConstraintValidator<ValidInstance, String> {
 

@@ -1,12 +1,5 @@
 package se.sundsvall.webmessagesender.api;
 
-import static java.util.UUID.randomUUID;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
-
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,6 +14,13 @@ import se.sundsvall.webmessagesender.api.model.Attachment;
 import se.sundsvall.webmessagesender.api.model.CreateWebMessageRequest;
 import se.sundsvall.webmessagesender.api.model.ExternalReference;
 import se.sundsvall.webmessagesender.service.WebMessageService;
+
+import static java.util.UUID.randomUUID;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")

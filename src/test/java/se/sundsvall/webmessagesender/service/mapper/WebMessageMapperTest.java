@@ -1,9 +1,5 @@
 package se.sundsvall.webmessagesender.service.mapper;
 
-import static org.apache.commons.codec.binary.Base64.decodeBase64;
-import static org.apache.commons.codec.binary.Base64.encodeBase64;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +12,10 @@ import se.sundsvall.webmessagesender.api.model.Sender;
 import se.sundsvall.webmessagesender.integration.db.model.AttachmentEntity;
 import se.sundsvall.webmessagesender.integration.db.model.ExternalReferenceEntity;
 import se.sundsvall.webmessagesender.integration.db.model.WebMessageEntity;
+
+import static org.apache.commons.codec.binary.Base64.decodeBase64;
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class WebMessageMapperTest {
 

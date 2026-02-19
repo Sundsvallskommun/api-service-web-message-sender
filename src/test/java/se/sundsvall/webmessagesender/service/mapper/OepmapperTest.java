@@ -1,5 +1,11 @@
 package se.sundsvall.webmessagesender.service.mapper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Base64;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import se.sundsvall.webmessagesender.generatedsources.oep.Attachment;
+
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -7,12 +13,6 @@ import static org.assertj.core.api.Assertions.within;
 import static org.assertj.core.groups.Tuple.tuple;
 import static se.sundsvall.webmessagesender.api.model.Attachment.create;
 import static se.sundsvall.webmessagesender.service.mapper.OepMapper.toAddMessage;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Base64;
-import java.util.List;
-import org.junit.jupiter.api.Test;
-import se.sundsvall.webmessagesender.generatedsources.oep.Attachment;
 
 class OepmapperTest {
 	private static final ObjectMapper MAPPER = new ObjectMapper();

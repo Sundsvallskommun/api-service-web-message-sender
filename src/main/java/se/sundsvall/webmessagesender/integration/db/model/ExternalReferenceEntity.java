@@ -1,7 +1,5 @@
 package se.sundsvall.webmessagesender.integration.db.model;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +12,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "external_reference", indexes = {

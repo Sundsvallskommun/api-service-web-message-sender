@@ -1,13 +1,13 @@
 package se.sundsvall.webmessagesender.service.mapper;
 
-import static org.springframework.util.MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE;
-import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import org.overviewproject.mime_types.MimeTypeDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.springframework.util.MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 
 public final class MimeTypeUtility {
 

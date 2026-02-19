@@ -1,10 +1,5 @@
 package se.sundsvall.webmessagesender.integration.oep.config;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.soap.SOAPDecoder;
 import feign.soap.SOAPErrorDecoder;
@@ -22,6 +17,11 @@ import org.springframework.test.context.ActiveProfiles;
 import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 import se.sundsvall.webmessagesender.Application;
 import se.sundsvall.webmessagesender.integration.oep.config.encoder.SOAPJAXBEncoder;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {
 	Application.class

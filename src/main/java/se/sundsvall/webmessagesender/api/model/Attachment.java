@@ -1,10 +1,10 @@
 package se.sundsvall.webmessagesender.api.model;
 
-import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Objects;
+
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 
 @Schema(description = "File attachment")
 public class Attachment {

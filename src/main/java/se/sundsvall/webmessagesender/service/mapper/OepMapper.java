@@ -1,8 +1,5 @@
 package se.sundsvall.webmessagesender.service.mapper;
 
-import static java.util.Collections.emptyList;
-import static javax.xml.datatype.DatatypeFactory.newInstance;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -12,6 +9,9 @@ import se.sundsvall.webmessagesender.generatedsources.oep.AddMessage;
 import se.sundsvall.webmessagesender.generatedsources.oep.Attachment;
 import se.sundsvall.webmessagesender.generatedsources.oep.IntegrationMessage;
 import se.sundsvall.webmessagesender.generatedsources.oep.Principal;
+
+import static java.util.Collections.emptyList;
+import static javax.xml.datatype.DatatypeFactory.newInstance;
 
 public final class OepMapper {
 
